@@ -1,555 +1,905 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Nothing Less Than Progress — Pricing & Quote Calculator</title>
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#000000; --fg:#ffffff; --blue:#1525FD; --green:#ADFE02; --muted:#9aa0a6; --card:#0f1115; --border:#1f2330;
-    }
-    *{box-sizing:border-box}
-    html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:Roboto,system-ui,-apple-system,Segoe UI,SegoeUI,Helvetica,Arial,sans-serif}
-    a{color:var(--blue)}
-    .wrap{max-width:980px;margin:0 auto;padding:20px}
-    .hdr{
-      background:var(--blue); color:#fff; text-align:center; padding:18px 12px; border-bottom:2px solid #0b18b9;
-    }
-    .hdr h1{margin:0;font-size:22px;font-weight:700}
-    .sub{margin-top:6px;font-size:14px;opacity:.95}
-    .grid{display:grid;grid-template-columns:1fr 1fr; gap:16px}
-    @media (max-width:900px){.grid{grid-template-columns:1fr}}
-    .card{
-      background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:0 4px 18px rgba(0,0,0,.25);
-    }
-    .card h2{margin:0 0 12px 0; font-size:18px; color:#fff; border-bottom:1px solid var(--border); padding-bottom:8px}
-    label{display:block; font-size:14px; margin:10px 0 6px}
-    input[type="text"],input[type="email"],input[type="number"],select,textarea{
-      width:100%; background:#0b0d12; color:#fff; border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:14px; outline:none;
-    }
-    textarea{min-height:90px; resize:vertical}
-    .row{display:flex; gap:12px}
-    .row > *{flex:1}
-    .help{color:var(--muted); font-size:12px; margin-top:4px}
-    .muted{color:var(--muted)}
-    .btn{
-      display:inline-block; appearance:none; border:none; background:var(--blue); color:#fff; padding:12px 16px; border-radius:12px; font-weight:700; cursor:pointer;
-      transition:transform .06s ease, filter .2s ease; text-decoration:none; text-align:center;
-    }
-    .btn:hover{filter:brightness(1.1)}
-    .btn:active{transform:translateY(1px)}
-    .btn.secondary{background:#0b0d12; border:1px solid var(--border); color:#e3e7ee}
-    .btn.green{background:var(--green); color:#0b0d12}
-    .sticky{
-      position:sticky; bottom:0; background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.85) 35%, rgba(0,0,0,.95));
-      padding:12px 0 6px; margin-top:8px;
-    }
-    table{width:100%; border-collapse:collapse; margin-top:6px}
-    th,td{padding:8px 6px; border-bottom:1px solid var(--border); font-size:14px; text-align:left}
-    th{color:#cbd1da; font-weight:600}
-    .total{font-weight:800}
-    .emph{font-weight:700; color:#fff}
-    .save{color:var(--green); font-weight:700}
-    .pill{display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; border:1px solid var(--border); color:#cbd1da}
-    .disclaimer{background:#0b0d12; border:1px dashed var(--border); color:#b8bdc7; padding:10px 12px; border-radius:12px; font-size:12px}
-    .section-title{margin:16px 0 8px; font-weight:700; color:#fff}
-    .divider{height:1px; background:var(--border); margin:12px 0}
-    .footer-note{font-size:12px; color:#9aa0a6; margin-top:12px}
-    .inline{display:inline}
-    .hide{display:none !important}
-    .badge{background:#0510aa; color:#fff; padding:2px 8px; border-radius:999px; font-size:12px; margin-left:6px}
-    .greenbadge{background:var(--green); color:#0b0d12}
-    .right{text-align:right}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nothing Less Than Progress Pricing Calculator</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            box-sizing: border-box;
+            font-family: 'Roboto', sans-serif;
+            font-size: 14px;
+            margin: 0;
+            padding: 20px;
+            background-color: #000000;
+            color: #FFFFFF;
+            line-height: 1.6;
+        }
+
+        .calculator-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: #000000;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1525FD, #0f1db8);
+            color: #FFFFFF;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 700;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .form-section {
+            background: #000000;
+            color: #FFFFFF;
+            padding: 30px;
+        }
+
+        .service-container {
+            border: 2px solid #333333;
+            background: #111111;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .service-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .service-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1525FD;
+        }
+
+        .remove-service-btn {
+            background: #ff4757;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 700;
+        }
+
+        .remove-service-btn:hover {
+            background: #ff3742;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 700;
+            color: #FFFFFF;
+            font-size: 14px;
+        }
+
+        .form-group select,
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            background: #222222;
+            color: #FFFFFF;
+            border: 2px solid #333333;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #1525FD;
+            box-shadow: 0 0 0 3px rgba(21, 37, 253, 0.1);
+        }
+
+        .toggle-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .toggle {
+            position: relative;
+            width: 60px;
+            height: 30px;
+            background: #ddd;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .toggle.active {
+            background: #ADFE02;
+        }
+
+        .toggle::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: 3px;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            transition: transform 0.3s ease;
+        }
+
+        .toggle.active::after {
+            transform: translateX(30px);
+        }
+
+        .toggle-label {
+            font-weight: 700;
+            color: #FFFFFF;
+            font-size: 14px;
+        }
+
+        .add-service-btn {
+            background: #1525FD;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .add-service-btn:hover {
+            background: #0f1db8;
+            box-shadow: 0 0 10px #ADFE02;
+        }
+
+        .add-service-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+        }
+
+        .breakdown-section {
+            background: #111111;
+            color: #FFFFFF;
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 5px solid #1525FD;
+        }
+
+        .breakdown-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #FFFFFF;
+            margin-bottom: 15px;
+        }
+
+        .service-breakdown {
+            margin-bottom: 25px;
+        }
+
+        .service-breakdown-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1525FD;
+            margin-bottom: 10px;
+        }
+
+        .breakdown-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+
+        .breakdown-table th,
+        .breakdown-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #333333;
+        }
+
+        .breakdown-table th {
+            background: #1525FD;
+            color: #FFFFFF;
+            font-weight: 700;
+        }
+
+        .savings {
+            color: #ADFE02 !important;
+            font-weight: 700;
+            border-left: 3px solid #ADFE02;
+            padding-left: 5px;
+        }
+
+        .total-row {
+            font-weight: 700;
+            font-size: 16px;
+            background: #111111;
+            color: #FFFFFF;
+            box-shadow: 0 2px 4px rgba(173, 254, 2, 0.2);
+            border: 1px solid #ADFE02;
+        }
+
+        .grand-total-section {
+            background: #1525FD;
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+
+        .quote-card {
+            background: #111111;
+            border: 2px solid #1525FD;
+            color: #FFFFFF;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .quote-summary {
+            font-size: 14px;
+            margin-bottom: 15px;
+            color: #FFFFFF;
+        }
+
+        .disclaimer {
+            font-style: italic;
+            color: #CCCCCC;
+            background: #222222;
+            font-size: 12px;
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .contact-section {
+            background: #1525FD;
+            color: #FFFFFF;
+            padding: 30px;
+        }
+
+        .contact-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .contact-form {
+            display: grid;
+            gap: 20px;
+        }
+
+        .contact-form input,
+        .contact-form textarea {
+            padding: 12px;
+            background: #FFFFFF;
+            color: #000000;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, #ADFE02, #8bc34a);
+            color: #000000;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(173, 254, 2, 0.3);
+        }
+
+        .submit-btn:disabled {
+            background: #95a5a6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header h1 {
+                font-size: 16px;
+            }
+            
+            .form-section,
+            .contact-section {
+                padding: 20px;
+            }
+            
+            .breakdown-table {
+                font-size: 12px;
+            }
+        }
+    </style>
 </head>
 <body>
-  <header class="hdr">
-    <h1>Get Your Personalized Quote — Nothing Less Than Progress</h1>
-    <div class="sub">Choose your service, see live pricing, and save your quote.</div>
-  </header>
-
-  <main class="wrap">
-    <div class="grid">
-      <!-- CONTACT -->
-      <section class="card">
-        <h2>1) Contact & Referral</h2>
-        <label>Full Name <span class="pill">required</span>
-          <input id="name" type="text" placeholder="Jane Doe" required>
-        </label>
-        <label>Email <span class="pill">required</span>
-          <input id="email" type="email" placeholder="you@example.com" required>
-        </label>
-        <div class="row">
-          <label>Phone (optional)
-            <input id="phone" type="text" placeholder="(555) 123-4567">
-          </label>
-          <label>How did you hear about us?
-            <select id="refSource">
-              <option>Friend/Referral</option>
-              <option>Instagram</option>
-              <option>TikTok</option>
-              <option>Google</option>
-              <option>Walk-in</option>
-              <option>Other</option>
-            </select>
-          </label>
-        </div>
-        <label id="refNameWrap">Referrer’s Name
-          <input id="refName" type="text" placeholder="Who referred you?">
-        </label>
-      </section>
-
-      <!-- SERVICE -->
-      <section class="card">
-        <h2>2) Choose Service</h2>
-        <label>Service Type
-          <select id="service">
-            <option value="tier1">Online Coaching — Tier 1 ($250/mo)</option>
-            <option value="tier2">Online Coaching — Tier 2 ($300/mo)</option>
-            <option value="tier3">Contest Prep — Tier 3 ($350 final month)</option>
-            <option value="pt1">In-Person Training — 1-on-1</option>
-            <option value="ptg">In-Person Training — Group (2–5)</option>
-            <option value="other">Other / Not Sure Yet</option>
-          </select>
-        </label>
-        <label>Notes (optional)
-          <textarea id="notes" maxlength="500" placeholder="Any details that help us tailor your quote…"></textarea>
-        </label>
-
-        <!-- Coaching Options -->
-        <div id="coachingBlock" class="divider hide"></div>
-        <div id="coachingOptions" class="hide">
-          <!-- Tier 1/2 shared -->
-          <div id="upfrontWrap" class="row">
-            <label>Upfront Option
-              <select id="upfront">
-                <!-- dynamic options per tier -->
-              </select>
-            </label>
-            <label id="monthsWrap">Months
-              <input id="months" type="number" min="1" step="1" value="1">
-              <div class="help">Used only when Upfront = None</div>
-            </label>
-          </div>
-
-          <!-- Tier 3 specifics -->
-          <div id="tier3Wrap" class="hide">
-            <label>Returning Client Discount
-              <select id="t3ret">
-                <option value="none">None</option>
-                <option value="325">Returning: $325 (7% off; Tier 2 ×2 mo prior)</option>
-                <option value="300">Returning: $300 (14% off; Tier 2 ×3 mo prior)</option>
-              </select>
-            </label>
-            <label class="row">
-              <span class="pill">Optional</span>
-              <span style="margin-left:8px" class="muted">Transformation Challenge pricing is custom — select “Other / Not Sure Yet” if you want a contact-only quote.</span>
-            </label>
-          </div>
+    <div class="calculator-container">
+        <div class="header">
+            <h1>Get Your Personalized Quote - Nothing Less Than Progress</h1>
         </div>
 
-        <!-- 1-on-1 PT -->
-        <div id="pt1Block" class="divider hide"></div>
-        <div id="pt1" class="hide row">
-          <label>Session Length
-            <select id="pt1Len">
-              <option value="30">30 min ($40)</option>
-              <option value="60" selected>60 min ($60)</option>
-              <option value="90">90 min ($80)</option>
-            </select>
-          </label>
-          <label>Package
-            <select id="pt1Pack">
-              <option value="1">Single (no discount)</option>
-              <option value="5">5 Sessions (10% off)</option>
-              <option value="10">10 Sessions (15% off)</option>
-              <option value="15">15 Sessions (20% off)</option>
-            </select>
-          </label>
+        <div class="form-section">
+            <div id="servicesContainer">
+                <div class="service-container" data-service-id="0">
+                    <div class="service-header">
+                        <div class="service-title">Service 1</div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceType-0">Service Type</label>
+                        <select id="serviceType-0" data-service-id="0">
+                            <option value="">Select a service...</option>
+                            <option value="online-basic">Online Basic Tier 1 ($250/mo)</option>
+                            <option value="online-advanced">Online Advanced Tier 2 ($300/mo)</option>
+                            <option value="online-contest">Contest Prep & Transformation Tier 3 ($350 final month + custom challenges)</option>
+                            <option value="inperson-individual">1-on-1 In-Person Training (60 min, $60/session)</option>
+                            <option value="inperson-group">Group In-Person Training (60 min, scalable)</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="duration-0" id="durationLabel-0">Duration</label>
+                        <input type="number" id="duration-0" data-service-id="0" min="1" max="15" value="1" oninvalid="this.value=1; this.dispatchEvent(new Event('input'))" placeholder="Enter duration">
+                    </div>
+
+                    <div class="form-group hidden" id="groupSizeGroup-0">
+                        <label for="groupSize-0">Group Size</label>
+                        <select id="groupSize-0" data-service-id="0">
+                            <option value="1">1 person</option>
+                            <option value="2">2 people</option>
+                            <option value="3">3 people</option>
+                            <option value="4">4 people</option>
+                            <option value="5">5 people</option>
+                        </select>
+                    </div>
+
+                    <div class="toggle-container hidden" id="returningToggleContainer-0">
+                        <div class="toggle" id="returningToggle-0" data-service-id="0" role="switch" aria-label="Returning Client toggle" aria-checked="false"></div>
+                        <span class="toggle-label">Returning Client? (Unlocks extra discounts)</span>
+                    </div>
+                </div>
+            </div>
+
+            <button class="add-service-btn" id="addServiceBtn">Add Another Service</button>
+
+            <div class="breakdown-section" id="breakdownSection" style="display: none;">
+                <div class="breakdown-title">Price Breakdown</div>
+                <div id="serviceBreakdowns"></div>
+                <div class="grand-total-section" id="grandTotalSection"></div>
+            </div>
+
+            <div class="quote-card" id="quoteCard" style="display: none;">
+                <div class="quote-summary" id="quoteSummary"></div>
+                <div class="disclaimer">
+                    This is an estimate. Final pricing after consultation/intake form. Subject to change based on your goals.
+                </div>
+            </div>
         </div>
 
-        <!-- Group PT -->
-        <div id="ptgBlock" class="divider hide"></div>
-        <div id="ptg" class="hide">
-          <div class="row">
-            <label>Duration
-              <select id="ptgDur">
-                <option value="60">60 min</option>
-                <option value="90">90 min</option>
-              </select>
-            </label>
-            <label>Group Size
-              <select id="ptgSize">
-                <option value="2">2</option>
-                <option value="3" selected>3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-              </select>
-            </label>
-            <label>Package
-              <select id="ptgPack">
-                <option value="1">Single (no discount)</option>
-                <option value="5">5 Sessions (10% off)</option>
-                <option value="10">10 Sessions (15% off)</option>
-                <option value="15">15 Sessions (20% off)</option>
-              </select>
-            </label>
-          </div>
+        <div class="contact-section">
+            <div class="contact-title">Save & Email Your Quote</div>
+            <div class="contact-form">
+                <input type="text" id="clientName" placeholder="Your Name (required)" required>
+                <input type="email" id="clientEmail" placeholder="Your Email (required)" required>
+                <input type="text" id="referral" placeholder="Referred by (name/email)?">
+                <textarea id="comments" placeholder="Any comments or questions for your coach?" rows="4" maxlength="500"></textarea>
+                <button class="submit-btn" id="submitBtn">Save & Email Quote</button>
+            </div>
         </div>
-      </section>
-
-      <!-- SUMMARY -->
-      <section class="card">
-        <h2>3) Quote Summary <span id="summaryBadge" class="badge">Live</span></h2>
-        <div id="serviceSummary" class="muted">Select a service to begin.</div>
-
-        <table id="summaryTable" class="hide">
-          <tbody>
-            <tr><th>Base Calculation</th><td id="baseExpr">—</td></tr>
-            <tr><th>Subtotal (before discounts)</th><td id="subtotal">—</td></tr>
-            <tr><th>Discount(s)</th><td><span id="discLabel" class="muted">—</span></td></tr>
-            <tr><th class="save">Savings</th><td class="save" id="savingsLine">—</td></tr>
-            <tr><th class="emph">FINAL PRE-TAX TOTAL</th><td class="emph" id="finalPretax">—</td></tr>
-            <tr><th>KY Sales Tax (6%)</th><td id="tax">—</td></tr>
-            <tr><th class="total">FINAL TOTAL (WITH TAX)</th><td class="total" id="finalWithTax">—</td></tr>
-            <tr id="ppRow" class="hide"><th>Per-Person (pre / with tax)</th><td id="perPerson">—</td></tr>
-          </tbody>
-        </table>
-
-        <div class="section-title">You selected</div>
-        <div id="selectedList" class="muted">—</div>
-
-        <div class="divider"></div>
-        <div class="disclaimer"><em>This is an estimate. Final pricing is confirmed after consultation/intake. Subject to change based on goals, travel, and complexity. All coaching is prepaid.</em></div>
-      </section>
-
-      <!-- ACTIONS -->
-      <section class="card">
-        <h2>4) Save & Email Your Quote</h2>
-        <div class="row">
-          <button id="copyBtn" class="btn secondary" type="button">Copy Quote</button>
-          <a id="bookBtn" class="btn" href="https://your-consult-link.com" target="_blank" rel="noopener">Book Consult</a>
-        </div>
-        <div class="sticky">
-          <button id="emailBtn" class="btn green" type="button">Email My Quote</button>
-          <div class="footer-note">We’ll prefill an email to <strong>YOUR_EMAIL_HERE@example.com</strong> and CC the address you entered.</div>
-        </div>
-      </section>
     </div>
-  </main>
 
-  <script>
-    // ===== CONFIG =====
-    const EMAIL_TO = "YOUR_EMAIL_HERE@example.com"; // <-- set your email
-    const BOOK_LINK = "https://your-consult-link.com"; // <-- set your scheduling link
-    document.getElementById('bookBtn').href = BOOK_LINK;
+    <script>
+        let serviceCount = 1;
+        let services = {};
 
-    // Rates & rules
-    const TAX_RATE = 0.06;
-    const tierRates = { tier1:250, tier2:300, tier3:350 };
-    const upfrontOptions = {
-      tier1: [
-        {label:"None", value:"none"},
-        {label:"2 months upfront = $450 total (10% off)", value:"2"},
-        {label:"3 months upfront = $600 total (20% off)", value:"3"}
-      ],
-      tier2: [
-        {label:"None", value:"none"},
-        {label:"2 months upfront = $500 total (~17% off)", value:"2"},
-        {label:"3 months upfront = $675 total (25% off)", value:"3"}
-      ]
-    };
-    const upfrontTotals = {
-      tier1: {2:450, 3:600},
-      tier2: {2:500, 3:675}
-    };
-    const pt1Base = { "30":40, "60":60, "90":80 };
-    const ptgBase = {
-      "60": {2:90, 3:120, 4:140, 5:150},
-      "90": {2:130,3:180, 4:220, 5:250}
-    };
+        const servicePricing = {
+            'online-basic': { base: 250, type: 'online', name: 'Online Basic Tier 1 ($250/mo)' },
+            'online-advanced': { base: 300, type: 'online', name: 'Online Advanced Tier 2 ($300/mo)' },
+            'online-contest': { base: 350, type: 'online', name: 'Contest Prep & Transformation Tier 3 ($350 final month + custom challenges) (Specialized for contest preparation and personalized transformation challenges)' },
+            'inperson-individual': { base: 60, type: 'inperson', name: '1-on-1 In-Person Training (60 min, $60/session)' },
+            'inperson-group': { base: 60, type: 'inperson-group', name: 'Group In-Person Training (60 min, scalable)' }
+        };
 
-    // ===== Helpers =====
-    const $ = id => document.getElementById(id);
-    const show = (el, on) => el.classList[on?"remove":"add"]("hide");
-    const money = n => "$" + (Math.round((n + Number.EPSILON)*100)/100).toFixed(2);
-    const pct = n => (Math.round(n*10)/10).toFixed(1) + "%";
-    const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+        const groupPricing = {
+            2: { total: 120, perPerson: 60 },
+            3: { total: 135, perPerson: 45 },
+            4: { total: 140, perPerson: 35 },
+            5: { total: 150, perPerson: 30 }
+        };
 
-    // ===== Elements =====
-    const nameEl=$("name"), emailEl=$("email"), phoneEl=$("phone");
-    const refSourceEl=$("refSource"), refNameWrap=$("refNameWrap"), refNameEl=$("refName");
-    const serviceEl=$("service"), notesEl=$("notes");
+        initializeService(0);
 
-    const coachingBlock=$("coachingBlock"), coachingOptions=$("coachingOptions");
-    const upfrontWrap=$("upfrontWrap"), upfrontEl=$("upfront"), monthsWrap=$("monthsWrap"), monthsEl=$("months");
-    const tier3Wrap=$("tier3Wrap"), t3retEl=$("t3ret");
+        function initializeService(serviceId) {
+            services[serviceId] = {
+                isReturning: false,
+                calculation: null
+            };
 
-    const pt1Block=$("pt1Block"), pt1Wrap=$("pt1"), pt1Len=$("pt1Len"), pt1Pack=$("pt1Pack");
-    const ptgBlock=$("ptgBlock"), ptgWrap=$("ptg"), ptgDur=$("ptgDur"), ptgSize=$("ptgSize"), ptgPack=$("ptgPack");
-
-    const serviceSummary=$("serviceSummary"), summaryTable=$("summaryTable");
-    const baseExpr=$("baseExpr"), subtotalEl=$("subtotal"), discLabel=$("discLabel"), savingsLine=$("savingsLine");
-    const finalPretax=$("finalPretax"), taxEl=$("tax"), finalWithTax=$("finalWithTax");
-    const ppRow=$("ppRow"), perPerson=$("perPerson");
-    const selectedList=$("selectedList");
-
-    const copyBtn=$("copyBtn"), emailBtn=$("emailBtn");
-
-    // ===== UI Logic =====
-    function toggleRef(){
-      show(refNameWrap, refSourceEl.value==="Friend/Referral");
-    }
-
-    function setupServiceUI(){
-      const s = serviceEl.value;
-      // reset visibility
-      show(coachingBlock,false); show(coachingOptions,false); show(tier3Wrap,false); show(upfrontWrap,false);
-      show(pt1Block,false); show(pt1Wrap,false);
-      show(ptgBlock,false); show(ptgWrap,false);
-
-      if(s==="tier1"||s==="tier2"){
-        show(coachingBlock,true); show(coachingOptions,true); show(upfrontWrap,true); show(tier3Wrap,false);
-        // populate upfront options
-        upfrontEl.innerHTML = upfrontOptions[s].map(o=>`<option value="${o.value}">${o.label}</option>`).join("");
-        show(monthsWrap, upfrontEl.value==="none");
-      }else if(s==="tier3"){
-        show(coachingBlock,true); show(coachingOptions,true); show(upfrontWrap,false); show(tier3Wrap,true);
-      }else if(s==="pt1"){
-        show(pt1Block,true); show(pt1Wrap,true);
-      }else if(s==="ptg"){
-        show(ptgBlock,true); show(ptgWrap,true);
-      }else{
-        // other / not sure — no options
-      }
-    }
-
-    // ===== Calculations =====
-    function calc(){
-      const s = serviceEl.value;
-      let before=0, finalPre=0, savings=0, savingsPct=0, baseText="—", discText="—";
-      let sessions = 0, months = 0;
-      let ppPre=0, ppWith=0; // per person
-
-      if(s==="tier1"||s==="tier2"){
-        const rate = tierRates[s];
-        const up = upfrontEl.value;
-        if(up==="none"){
-          months = Math.max(1, parseInt(monthsEl.value||"1",10));
-          before = rate * months;
-          finalPre = before;
-          savings = 0;
-          savingsPct = 0;
-          baseText = `$${rate} × ${months} month${months>1?"s":""}`;
-          discText = "No upfront discount";
-        }else{
-          const m = parseInt(up,10); // 2 or 3
-          const total = upfrontTotals[s][m];
-          const beforeDisc = rate * m;
-          before = beforeDisc;
-          finalPre = total;
-          savings = beforeDisc - total;
-          savingsPct = beforeDisc>0 ? (savings / beforeDisc * 100) : 0;
-          baseText = `$${rate} × ${m} months`;
-          discText = `Upfront discount applied (${m} mo)`;
-          months = m;
+            const typeSelect = document.getElementById(`serviceType-${serviceId}`);
+            typeSelect.addEventListener('change', () => handleServiceChange(serviceId));
+            document.getElementById(`duration-${serviceId}`).addEventListener('input', () => calculatePrice(serviceId));
+            document.getElementById(`groupSize-${serviceId}`).addEventListener('change', () => calculatePrice(serviceId));
+            document.getElementById(`returningToggle-${serviceId}`).addEventListener('click', () => toggleReturning(serviceId));
         }
-      } else if(s==="tier3"){
-        before = tierRates.tier3; // 350
-        const retSel = t3retEl.value; // none/325/300
-        let price = before;
-        if(retSel==="325") price = 325;
-        if(retSel==="300") price = 300;
-        finalPre = price;
-        savings = before - price;
-        savingsPct = before>0 ? (savings / before * 100) : 0;
-        baseText = `$350 (final prep month)`;
-        discText = (retSel==="none") ? "No returning discount" :
-                   (retSel==="325") ? "Returning discount (7%)" : "Returning discount (14%)";
-      } else if(s==="pt1"){
-        const len = pt1Len.value; // 30/60/90
-        const pack = parseInt(pt1Pack.value,10); // 1/5/10/15
-        const base = pt1Base[len];
-        sessions = pack===1 ? 1 : pack;
-        before = base * sessions;
-        const discPct = pack===1?0:(pack===5?10:(pack===10?15:20));
-        savings = before * (discPct/100);
-        finalPre = before - savings;
-        savingsPct = discPct;
-        baseText = `$${base} × ${sessions} session${sessions>1?"s":""}`;
-        discText = discPct ? `Package discount (${discPct}%)` : "No package discount";
-      } else if(s==="ptg"){
-        const dur = ptgDur.value; // 60/90
-        const size = parseInt(ptgSize.value,10); // 2-5
-        const pack = parseInt(ptgPack.value,10); // 1/5/10/15
-        const base = ptgBase[dur][size];
-        sessions = pack===1 ? 1 : pack;
-        before = base * sessions;
-        const discPct = pack===1?0:(pack===5?10:(pack===10?15:20));
-        savings = before * (discPct/100);
-        finalPre = before - savings;
-        savingsPct = discPct;
-        baseText = `$${base} (group) × ${sessions} session${sessions>1?"s":""} for ${size} people, ${dur} min`;
-        discText = discPct ? `Package discount (${discPct}%)` : "No package discount";
-        ppPre = finalPre / size;
-      } else if(s==="other"){
-        baseText = "Custom service — pricing on consultation";
-        discText = "—";
-        before = 0; finalPre = 0; savings = 0; savingsPct = 0;
-      }
 
-      savingsPct = clamp(savingsPct, 0, 100);
-      const tax = finalPre * TAX_RATE;
-      const finalWith = finalPre + tax;
+        function addService() {
+            if (serviceCount >= 5) return;
 
-      // Update UI
-      show(summaryTable,true);
-      baseExpr.textContent = baseText;
-      subtotalEl.textContent = money(before);
-      discLabel.textContent = discText;
-      savingsLine.textContent = `${money(savings)} (${pct(savingsPct/100)})`;
-      finalPretax.textContent = money(finalPre);
-      taxEl.textContent = money(tax);
-      finalWithTax.textContent = money(finalWith);
+            const container = document.getElementById('servicesContainer');
+            const serviceHtml = `
+                <div class="service-container" data-service-id="${serviceCount}">
+                    <div class="service-header">
+                        <div class="service-title">Service ${serviceCount + 1}</div>
+                        <button class="remove-service-btn" onclick="removeService(${serviceCount})">Remove</button>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="serviceType-${serviceCount}">Service Type</label>
+                        <select id="serviceType-${serviceCount}" data-service-id="${serviceCount}">
+                            <option value="">Select a service...</option>
+                            <option value="online-basic">Online Basic Tier 1 ($250/mo)</option>
+                            <option value="online-advanced">Online Advanced Tier 2 ($300/mo)</option>
+                            <option value="online-contest">Contest Prep & Transformation Tier 3 ($350 final month + custom challenges)</option>
+                            <option value="inperson-individual">1-on-1 In-Person Training (60 min, $60/session)</option>
+                            <option value="inperson-group">Group In-Person Training (60 min, scalable)</option>
+                        </select>
+                    </div>
 
-      // Per person (group only)
-      if(s==="ptg"){
-        ppRow.classList.remove("hide");
-        ppWith = finalWith / parseInt(ptgSize.value,10);
-        perPerson.textContent = `${money(ppPre)} / ${money(ppWith)}`;
-      } else {
-        ppRow.classList.add("hide");
-      }
+                    <div class="form-group">
+                        <label for="duration-${serviceCount}" id="durationLabel-${serviceCount}">Duration</label>
+                        <input type="number" id="duration-${serviceCount}" data-service-id="${serviceCount}" min="1" max="15" value="1" oninvalid="this.value=1; this.dispatchEvent(new Event('input'))" placeholder="Enter duration">
+                    </div>
 
-      // Selected list
-      selectedList.innerHTML = renderSelectionSummary();
-      serviceSummary.textContent = humanServiceSummary();
-    }
+                    <div class="form-group hidden" id="groupSizeGroup-${serviceCount}">
+                        <label for="groupSize-${serviceCount}">Group Size</label>
+                        <select id="groupSize-${serviceCount}" data-service-id="${serviceCount}">
+                            <option value="1">1 person</option>
+                            <option value="2">2 people</option>
+                            <option value="3">3 people</option>
+                            <option value="4">4 people</option>
+                            <option value="5">5 people</option>
+                        </select>
+                    </div>
 
-    function humanServiceSummary(){
-      const s = serviceEl.value;
-      if(s==="tier1"){
-        if(upfrontEl.value==="none") return `Online Coaching — Tier 1 ($250/mo), ${Math.max(1,parseInt(monthsEl.value||"1",10))} month(s)`;
-        return `Online Coaching — Tier 1 (Upfront ${upfrontEl.value} mo)`;
-      }
-      if(s==="tier2"){
-        if(upfrontEl.value==="none") return `Online Coaching — Tier 2 ($300/mo), ${Math.max(1,parseInt(monthsEl.value||"1",10))} month(s)`;
-        return `Online Coaching — Tier 2 (Upfront ${upfrontEl.value} mo)`;
-      }
-      if(s==="tier3"){
-        const ret = t3retEl.value==="none" ? "no returning discount" : `returning discount to $${t3retEl.value}`;
-        return `Contest Prep — Tier 3 ($350 final month, ${ret})`;
-      }
-      if(s==="pt1"){
-        const lenLbl = pt1Len.value+" min";
-        const packLbl = pt1Pack.value==="1" ? "Single" : (pt1Pack.value+" Sessions");
-        return `In-Person Training — 1-on-1 (${lenLbl}, ${packLbl})`;
-      }
-      if(s==="ptg"){
-        const dur = ptgDur.value, size = ptgSize.value, packLbl = ptgPack.value==="1" ? "Single" : (ptgPack.value+" Sessions");
-        return `In-Person Training — Group (${dur} min, ${size} people, ${packLbl})`;
-      }
-      return "Other / Not Sure Yet";
-    }
+                    <div class="toggle-container hidden" id="returningToggleContainer-${serviceCount}">
+                        <div class="toggle" id="returningToggle-${serviceCount}" data-service-id="${serviceCount}" role="switch" aria-label="Returning Client toggle" aria-checked="false"></div>
+                        <span class="toggle-label">Returning Client? (Unlocks extra discounts)</span>
+                    </div>
+                </div>
+            `;
 
-    function renderSelectionSummary(){
-      const lines = [];
-      const s = serviceEl.value;
-      lines.push(`<span class="emph">${humanServiceSummary()}</span>`);
-      const n = notesEl.value.trim();
-      if(n) lines.push(`<span class="muted">Notes: ${escapeHtml(n)}</span>`);
-      const src = refSourceEl.value; 
-      const rn = (src==="Friend/Referral" ? (refNameEl.value.trim()||"—") : "—");
-      lines.push(`<span class="muted">Referral: ${escapeHtml(src)}${src==="Friend/Referral" ? ` ( ${escapeHtml(rn)} )` : ""}</span>`);
-      return lines.join("<br>");
-    }
+            container.insertAdjacentHTML('beforeend', serviceHtml);
+            initializeService(serviceCount);
+            serviceCount++;
 
-    function escapeHtml(s){
-      return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
-    }
+            document.getElementById('addServiceBtn').disabled = serviceCount >= 5;
+        }
 
-    // Copy & Email
-    function buildPlainQuote(){
-      const base = baseExpr.textContent;
-      const subtotal = subtotalEl.textContent;
-      const disc = discLabel.textContent;
-      const save = savingsLine.textContent;
-      const pre = finalPretax.textContent;
-      const tax = taxEl.textContent;
-      const withTax = finalWithTax.textContent;
-      const ppRowVisible = !ppRow.classList.contains("hide");
-      const pp = ppRowVisible ? perPerson.textContent : null;
+        function removeService(serviceId) {
+            const serviceElement = document.querySelector(`[data-service-id="${serviceId}"]`);
+            serviceElement.remove();
+            delete services[serviceId];
+            
+            document.getElementById('addServiceBtn').disabled = false;
+            
+            calculateAllPrices();
+        }
 
-      const lines = [
-        `Name: ${nameEl.value || "-"}`,
-        `Email: ${emailEl.value || "-"}`,
-        `Phone: ${phoneEl.value || "-"}`,
-        `Referral Source: ${refSourceEl.value}`,
-        `Referrer’s Name: ${refSourceEl.value==="Friend/Referral"?(refNameEl.value||"-"):"-"} `,
-        ``,
-        `Service: ${humanServiceSummary()}`,
-        `Base Calculation: ${base}`,
-        `Subtotal (before discounts): ${subtotal}`,
-        `Discounts: ${disc}`,
-        `Savings: ${save}`,
-        `FINAL PRE-TAX TOTAL: ${pre}`,
-        `KY Sales Tax (6%): ${tax}`,
-        `FINAL TOTAL (WITH TAX): ${withTax}`,
-      ];
-      if(ppRowVisible) lines.push(`Per-Person (pre / with tax): ${pp}`);
-      const n = notesEl.value.trim();
-      if(n){ lines.push(""); lines.push(`Notes: ${n}`); }
-      lines.push(""); lines.push("Disclaimer acknowledged: This is an estimate and subject to change after consultation.");
-      return lines.join("\n");
-    }
+        function handleServiceChange(serviceId) {
+            const serviceType = document.getElementById(`serviceType-${serviceId}`).value;
+            const groupSizeGroup = document.getElementById(`groupSizeGroup-${serviceId}`);
+            const returningToggleContainer = document.getElementById(`returningToggleContainer-${serviceId}`);
+            const labelEl = document.getElementById(`durationLabel-${serviceId}`);
+            
+            if (serviceType.startsWith('online')) {
+                labelEl.textContent = 'Number of Months';
+            } else if (serviceType.startsWith('inperson')) {
+                labelEl.textContent = 'Number of Sessions';
+            } else {
+                labelEl.textContent = 'Duration';
+            }
+            
+            if (serviceType === 'inperson-group') {
+                groupSizeGroup.classList.remove('hidden');
+            } else {
+                groupSizeGroup.classList.add('hidden');
+            }
+            
+            if (serviceType === 'online-advanced' || serviceType === 'online-contest') {
+                returningToggleContainer.classList.remove('hidden');
+            } else {
+                returningToggleContainer.classList.add('hidden');
+                services[serviceId].isReturning = false;
+                document.getElementById(`returningToggle-${serviceId}`).classList.remove('active');
+                document.getElementById(`returningToggle-${serviceId}`).setAttribute('aria-checked', 'false');
+            }
+            
+            calculatePrice(serviceId);
+        }
 
-    function doCopy(){
-      const text = buildPlainQuote();
-      navigator.clipboard.writeText(text).then(()=> {
-        copyBtn.textContent = "Copied!";
-        setTimeout(()=> copyBtn.textContent="Copy Quote", 1200);
-      }).catch(()=> {
-        alert("Copy failed. Select the text manually:\n\n"+text);
-      });
-    }
+        function toggleReturning(serviceId) {
+            const toggle = document.getElementById(`returningToggle-${serviceId}`);
+            services[serviceId].isReturning = !services[serviceId].isReturning;
+            toggle.classList.toggle('active', services[serviceId].isReturning);
+            toggle.setAttribute('aria-checked', services[serviceId].isReturning ? 'true' : 'false');
+            calculatePrice(serviceId);
+        }
 
-    function doEmail(){
-      const name = nameEl.value.trim();
-      const em = emailEl.value.trim();
-      if(!name || !em){ alert("Please enter your Name and Email first."); return; }
+        function calculatePrice(serviceId) {
+            const serviceType = document.getElementById(`serviceType-${serviceId}`).value;
+            let duration = parseInt(document.getElementById(`duration-${serviceId}`).value) || 1;
+            if (duration < 1) duration = 1;
+            const groupSize = parseInt(document.getElementById(`groupSize-${serviceId}`).value) || 1;
 
-      const subject = `Quote – ${name} – ${humanServiceSummary()}`;
-      const body = buildPlainQuote()
-        .replace(/\n/g, "%0D%0A")
-        .replace(/#/g, "%23"); // ensure color hashes or similar won't break
+            if (!serviceType) {
+                services[serviceId].calculation = null;
+                calculateAllPrices();
+                return;
+            }
 
-      const mailto = `mailto:${encodeURIComponent(EMAIL_TO)}?cc=${encodeURIComponent(em)}&subject=${encodeURIComponent(subject)}&body=${body}`;
-      window.location.href = mailto;
-    }
+            const service = servicePricing[serviceType];
+            let subtotal = 0;
+            let baseDescription = '';
 
-    // Events
-    refSourceEl.addEventListener("change", ()=>{ toggleRef(); });
-    [nameEl,emailEl,phoneEl,refNameEl,notesEl].forEach(el=> el.addEventListener("input", ()=>{}));
+            if (service.type === 'online') {
+                subtotal = service.base * duration;
+                baseDescription = `$${service.base}/month × ${duration} months`;
+            } else if (service.type === 'inperson') {
+                subtotal = service.base * duration;
+                baseDescription = `$${service.base}/session × ${duration} sessions`;
+            } else if (service.type === 'inperson-group') {
+                const groupRate = groupPricing[groupSize] || { total: service.base * groupSize, perPerson: service.base };
+                subtotal = groupRate.total * duration;
+                baseDescription = `$${groupRate.total}/session (${groupSize} people) × ${duration} sessions`;
+            }
 
-    serviceEl.addEventListener("change", ()=>{ setupServiceUI(); calc(); });
-    upfrontEl.addEventListener("change", ()=>{ show(monthsWrap, upfrontEl.value==="none"); calc(); });
-    monthsEl.addEventListener("input", ()=>{ calc(); });
-    t3retEl.addEventListener("change", ()=>{ calc(); });
+            let packageDiscountPercent = 0;
+            if (service.type === 'online') {
+                if (serviceType === 'online-basic') {
+                    if (duration >= 3) packageDiscountPercent = 20;
+                    else if (duration >= 2) packageDiscountPercent = 10;
+                } else if (serviceType === 'online-advanced') {
+                    if (duration >= 3) packageDiscountPercent = 25;
+                    else if (duration >= 2) packageDiscountPercent = 17;
+                } // Tier 3 no package discount
+            } else {
+                if (duration >= 15) packageDiscountPercent = 20;
+                else if (duration >= 10) packageDiscountPercent = 15;
+                else if (duration >= 5) packageDiscountPercent = 10;
+            }
 
-    pt1Len.addEventListener("change", ()=>{ calc(); });
-    pt1Pack.addEventListener("change", ()=>{ calc(); });
+            const packageDiscountAmount = subtotal * (packageDiscountPercent / 100);
+            const packageSubtotal = subtotal - packageDiscountAmount;
 
-    [ptgDur, ptgSize, ptgPack].forEach(el=> el.addEventListener("change", ()=>{ calc(); }));
+            let returningDiscountPercent = 0;
+            if (services[serviceId].isReturning && (serviceType === 'online-advanced' || serviceType === 'online-contest')) {
+                if (duration >= 3) returningDiscountPercent = 14;
+                else if (duration >= 2) returningDiscountPercent = 7;
+            }
 
-    copyBtn.addEventListener("click", doCopy);
-    emailBtn.addEventListener("click", doEmail);
+            const returningDiscountAmount = packageSubtotal * (returningDiscountPercent / 100);
+            const finalTotal = packageSubtotal - returningDiscountAmount;
+            const totalSavings = packageDiscountAmount + returningDiscountAmount;
+            const totalSavingsPercent = totalSavings > 0 ? ((totalSavings / subtotal) * 100).toFixed(1) : 0;
 
-    // init
-    toggleRef();
-    setupServiceUI();
-    calc();
-  </script>
+            services[serviceId].calculation = {
+                service: service.name,
+                duration,
+                groupSize: service.type === 'inperson-group' ? groupSize : null,
+                isReturning: services[serviceId].isReturning,
+                subtotal,
+                packageDiscountPercent,
+                packageDiscountAmount,
+                returningDiscountPercent,
+                returningDiscountAmount,
+                finalTotal,
+                totalSavings,
+                totalSavingsPercent,
+                baseDescription
+            };
+
+            calculateAllPrices();
+        }
+
+        function calculateAllPrices() {
+            const validServices = Object.values(services).filter(s => s.calculation);
+            
+            if (validServices.length === 0) {
+                document.getElementById('breakdownSection').style.display = 'none';
+                document.getElementById('quoteCard').style.display = 'none';
+                return;
+            }
+
+            let grandSubtotal = 0;
+            let grandPackageDiscount = 0;
+            let grandReturningDiscount = 0;
+            let grandTotal = 0;
+            let grandSavings = 0;
+
+            let breakdownHtml = '';
+            Object.entries(services).forEach(([serviceId, serviceData]) => {
+                if (!serviceData.calculation) return;
+                
+                const calc = serviceData.calculation;
+                grandSubtotal += calc.subtotal;
+                grandPackageDiscount += calc.packageDiscountAmount;
+                grandReturningDiscount += calc.returningDiscountAmount;
+                grandTotal += calc.finalTotal;
+                grandSavings += calc.totalSavings;
+
+                breakdownHtml += `
+                    <div class="service-breakdown">
+                        <div class="service-breakdown-title">${calc.service}</div>
+                        <table class="breakdown-table">
+                            <tbody>
+                                <tr>
+                                    <td>Base Cost</td>
+                                    <td>${calc.baseDescription}</td>
+                                    <td>$${calc.subtotal.toFixed(2)}</td>
+                                </tr>
+                `;
+
+                if (calc.packageDiscountAmount > 0) {
+                    breakdownHtml += `
+                        <tr class="discount-row">
+                            <td>Package Discount</td>
+                            <td>${calc.packageDiscountPercent}% off</td>
+                            <td class="savings">-$${calc.packageDiscountAmount.toFixed(2)}</td>
+                        </tr>
+                    `;
+                }
+
+                if (calc.returningDiscountAmount > 0) {
+                    breakdownHtml += `
+                        <tr class="discount-row">
+                            <td>Returning Client Discount</td>
+                            <td>${calc.returningDiscountPercent}% off</td>
+                            <td class="savings">-$${calc.returningDiscountAmount.toFixed(2)}</td>
+                        </tr>
+                    `;
+                }
+
+                breakdownHtml += `
+                                <tr class="total-row">
+                                    <td>Service Total</td>
+                                    <td></td>
+                                    <td>$${calc.finalTotal.toFixed(2)}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                `;
+            });
+
+            document.getElementById('serviceBreakdowns').innerHTML = breakdownHtml;
+
+            const taxAmount = grandTotal * 0.06;
+            const finalAmount = grandTotal + taxAmount;
+            const grandSavingsPercent = grandSavings > 0 ? ((grandSavings / grandSubtotal) * 100).toFixed(1) : 0;
+
+            let grandTotalHtml = `
+                <table class="breakdown-table">
+                    <thead>
+                        <tr>
+                            <th>Grand Total Summary</th>
+                            <th></th>
+                            <th>Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Combined Subtotal</td>
+                            <td></td>
+                            <td>$${grandSubtotal.toFixed(2)}</td>
+                        </tr>
+            `;
+
+            if (grandPackageDiscount > 0) {
+                grandTotalHtml += `
+                    <tr class="discount-row">
+                        <td>Total Package Discounts</td>
+                        <td></td>
+                        <td class="savings">-$${grandPackageDiscount.toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+
+            if (grandReturningDiscount > 0) {
+                grandTotalHtml += `
+                    <tr class="discount-row">
+                        <td>Total Returning Client Discounts</td>
+                        <td></td>
+                        <td class="savings">-$${grandReturningDiscount.toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+
+            grandTotalHtml += `
+                        <tr class="total-row">
+                            <td><strong>GRAND TOTAL</strong></td>
+                            <td></td>
+                            <td><strong>$${grandTotal.toFixed(2)}</strong></td>
+                        </tr>
+                        <tr class="discount-row">
+                            <td>KY Sales Tax (6%)</td>
+                            <td></td>
+                            <td class="savings">+$${taxAmount.toFixed(2)}</td>
+                        </tr>
+                        <tr class="total-row">
+                            <td><strong>FINAL TOTAL (incl. tax)</strong></td>
+                            <td></td>
+                            <td><strong>$${finalAmount.toFixed(2)}</strong></td>
+                        </tr>
+            `;
+
+            if (grandSavings > 0) {
+                grandTotalHtml += `
+                    <tr>
+                        <td><strong>Total Savings</strong></td>
+                        <td>${grandSavingsPercent}% saved</td>
+                        <td class="savings"><strong>$${grandSavings.toFixed(2)}</strong></td>
+                    </tr>
+                `;
+            }
+
+            grandTotalHtml += `
+                    </tbody>
+                </table>
+            `;
+
+            document.getElementById('grandTotalSection').innerHTML = grandTotalHtml;
+            document.getElementById('breakdownSection').style.display = 'block';
+
+            updateQuoteCard();
+        }
+
+        function updateQuoteCard() {
+            const quoteSummary = document.getElementById('quoteSummary');
+            const validServices = Object.values(services).filter(s => s.calculation);
+            
+            let summary = '<strong>You selected:</strong><br>';
+            
+            validServices.forEach((serviceData, index) => {
+                const calc = serviceData.calculation;
+                summary += `${index + 1}. ${calc.service} for ${calc.duration} ${calc.service.includes('Online') ? 'months' : 'sessions'}`;
+                
+                if (calc.groupSize && calc.groupSize > 1) {
+                    summary += ` with Group Size ${calc.groupSize}`;
+                }
+                
+                if (calc.isReturning) {
+                    summary += ` as Returning Client`;
+                }
+                
+                summary += '<br>';
+            });
+
+            quoteSummary.innerHTML = summary;
+            document.getElementById('quoteCard').style.display = 'block';
+        }
+
+        function validateEmail(email) {
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            return emailRegex.test(email);
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', submitQuote);
+
+        function submitQuote() {
+            const name = document.getElementById('clientName').value.trim();
+            const email = document.getElementById('clientEmail').value.trim();
+            const referral = document.getElementById('referral').value.trim();
+            const comments = document.getElementById('comments').value.trim();
+
+            if (!name) {
+                alert('Please enter your name.');
+                return;
+            }
+
+            if (!email || !validateEmail(email)) {
+                alert('Please enter a valid email address.');
+                return;
+            }
+
+            const validServices = Object.values(services).filter(s => s.calculation);
+            if (validServices.length === 0) {
+                alert('Please complete at least one service calculation.');
+                return;
+            }
+
+            const subject = `Fitness Coaching Quote for ${name}`;
+            
+            let emailBody = `New pricing quote request:\n\n`;
+            emailBody += `Client Information:\n`;
+            emailBody += `Name: ${name}\n`;
+            emailBody += `Email: ${email}\n`;
+            if (referral) emailBody += `Referred by: ${referral}\n`;
+            if (comments) emailBody += `\nComments/Questions:\n${comments}\n`;
+            emailBody += `\n`;
+
+            emailBody += `Selected Services:\n`;
+            let grandTotal = 0;
+            let grandSavings = 0;
+            let taxAmount = 0;
+            let finalAmount = 0;
+            
+            validServices.forEach((serviceData, index) => {
+                const calc = serviceData.calculation;
+                grandTotal += calc.finalTotal;
+                grandSavings += calc.totalSavings;
+                
+                emailBody += `\nService ${index + 1}: ${calc.service}\n`;
+                emailBody += `Duration: ${calc.duration} ${calc.service.includes('Online') ? 'months' : 'sessions'}\n`;
+                if (calc.groupSize && calc.groupSize > 1) {
+                    emailBody += `Group Size: ${calc.groupSize} people\n`;
+                }
+                emailBody += `Returning Client: ${calc.isReturning ? 'Yes' : 'No'}\n`;
+                emailBody += `Base Cost: $${calc.subtotal.toFixed(2)}\n`;
+                if (calc.packageDiscountAmount > 0) {
+                    emailBody += `Package Discount (${calc.packageDiscountPercent}%): -$${calc.packageDiscountAmount.toFixed(2)}\n`;
+                }
+                if (calc.returningDiscountAmount > 0) {
+                    emailBody += `Returning Client Discount (${calc.returningDiscountPercent}%): -$${calc.returningDiscountAmount.toFixed(2)}\n`;
+                }
+                emailBody += `Service Total: $${calc.finalTotal.toFixed(2)}\n`;
+            });
+            
+            taxAmount = grandTotal * 0.06;
+            finalAmount = grandTotal + taxAmount;
+            
+            emailBody += `\nGRAND TOTAL: $${grandTotal.toFixed(2)}\n`;
+            emailBody += `KY Sales Tax (6%): +$${taxAmount.toFixed(2)}\n`;
+            emailBody += `FINAL TOTAL (incl. tax): $${finalAmount.toFixed(2)}\n`;
+            if (grandSavings > 0) {
+                emailBody += `Total Savings: $${grandSavings.toFixed(2)}\n`;
+            }
+            emailBody += `\nThis is an estimate. Final pricing after consultation/intake form. Subject to change based on your goals.`;
+
+            const mailtoLink = `mailto:NothinglessThanProgress@gmail.com?cc=${encodeURIComponent(email)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+            
+            window.open(mailtoLink, '_blank');
+            
+            alert('Quote email has been prepared! Your email client should open with the quote details ready to send.');
+        }
+    </script>
 </body>
 </html>
