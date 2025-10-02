@@ -1,908 +1,566 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nothing Less Than Progress Pricing Calculator</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            box-sizing: border-box;
-            font-family: 'Roboto', sans-serif;
-            font-size: 14px;
-            margin: 0;
-            padding: 20px;
-            background-color: #000000;
-            color: #FFFFFF;
-            line-height: 1.6;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1.0" />
+  <title>Nothing Less Than Progress Pricing Calculator</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet" />
+  <style>
+    *{box-sizing:border-box}
+    body{
+      font-family:'Roboto',sans-serif;font-size:14px;line-height:1.6;
+      margin:0;padding:20px;background:#000;color:#fff;
+    }
+    .calculator-container{max-width:800px;margin:0 auto;background:#000;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.1);overflow:hidden}
+    .header{background:linear-gradient(135deg,#1525FD,#0f1db8);color:#fff;padding:30px;text-align:center}
+    .header h1{margin:0;font-size:18px;font-weight:700;text-shadow:2px 2px 4px rgba(0,0,0,.3)}
 
-        .calculator-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: #000000;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            overflow: hidden;
-        }
+    .form-section{background:#000;color:#fff;padding:30px}
+    .service-container{border:2px solid #333;background:#111;border-radius:8px;padding:20px;margin-bottom:20px}
+    .service-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
 
-        .header {
-            background: linear-gradient(135deg, #1525FD, #0f1db8);
-            color: #FFFFFF;
-            padding: 30px;
-            text-align: center;
-        }
+    /* Green label for "Service X" (not clickable) */
+    .service-title{
+      font-size:16px;font-weight:700;color:#000;background:#ADFE02;
+      display:inline-block;padding:6px 10px;border-radius:6px;line-height:1;cursor:default;
+      box-shadow:0 0 0 1px rgba(173,254,2,.25) inset;
+    }
 
-        .header h1 {
-            margin: 0;
-            font-size: 18px;
-            font-weight: 700;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-        }
+    .remove-service-btn{background:#ff4757;color:#fff;border:none;padding:8px 12px;border-radius:5px;cursor:pointer;font-size:12px;font-weight:700}
+    .remove-service-btn:hover{background:#ff3742}
 
-        .form-section {
-            background: #000000;
-            color: #FFFFFF;
-            padding: 30px;
-        }
+    .form-group{margin-bottom:25px}
+    .form-group label{display:block;margin-bottom:8px;font-weight:700;color:#fff;font-size:14px}
+    .form-group select,.form-group input{
+      width:100%;padding:12px;background:#222;color:#fff;border:2px solid #333;border-radius:8px;font-size:14px;transition:border-color .3s ease
+    }
+    .form-group select:focus,.form-group input:focus{outline:none;border-color:#1525FD;box-shadow:0 0 0 3px rgba(21,37,253,.1)}
 
-        .service-container {
-            border: 2px solid #333333;
-            background: #111111;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            position: relative;
-        }
+    .toggle-container{display:flex;align-items:center;gap:12px;margin-bottom:25px}
+    .toggle{position:relative;width:60px;height:30px;background:#ddd;border-radius:15px;cursor:pointer;transition:background .3s ease}
+    .toggle.active{background:#ADFE02}
+    .toggle::after{content:'';position:absolute;top:3px;left:3px;width:24px;height:24px;background:#fff;border-radius:50%;transition:transform .3s ease}
+    .toggle.active::after{transform:translateX(30px)}
+    .toggle-label{font-weight:700;color:#fff;font-size:14px}
 
-        .service-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
+    .add-service-btn{
+      background:#1525FD;color:#fff;border:none;padding:12px 24px;border-radius:8px;cursor:pointer;
+      font-size:14px;font-weight:700;margin-bottom:20px;transition:background .3s ease
+    }
+    .add-service-btn:hover{background:#0f1db8;box-shadow:0 0 10px #ADFE02}
+    .add-service-btn:disabled{background:#95a5a6;cursor:not-allowed}
 
-        .service-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #1525FD;
-        }
+    .breakdown-section{background:#111;color:#fff;padding:25px;margin:20px 0;border-radius:8px;border-left:5px solid #1525FD}
+    .breakdown-title{font-size:18px;font-weight:700;margin-bottom:15px}
+    .service-breakdown{margin-bottom:25px}
+    .service-breakdown-title{font-size:16px;font-weight:700;color:#1525FD;margin-bottom:10px}
 
-        .remove-service-btn {
-            background: #ff4757;
-            color: white;
-            border: none;
-            padding: 8px 12px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 700;
-        }
+    .breakdown-table{width:100%;border-collapse:collapse;margin-bottom:20px}
+    .breakdown-table th,.breakdown-table td{padding:12px;text-align:left;border-bottom:1px solid #333}
+    .breakdown-table th{background:#1525FD;color:#fff;font-weight:700}
 
-        .remove-service-btn:hover {
-            background: #ff3742;
-        }
+    .discount-row{border-left:3px solid #ADFE02;padding-left:5px}
+    .savings{color:#ADFE02 !important;font-weight:700}
+    .total-row{font-weight:700;font-size:16px;background:#111;color:#fff;box-shadow:0 2px 4px rgba(173,254,2,.2);border:1px solid #ADFE02}
 
-        .form-group {
-            margin-bottom: 25px;
-        }
+    .grand-total-section{background:#1525FD;color:#fff;padding:15px;border-radius:8px;margin-top:20px}
 
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 700;
-            color: #FFFFFF;
-            font-size: 14px;
-        }
+    .quote-card{background:#111;border:2px solid #1525FD;color:#fff;border-radius:8px;padding:20px;margin:20px 0}
+    .quote-summary{font-size:14px;margin-bottom:15px}
+    .disclaimer{font-style:italic;color:#ccc;background:#222;font-size:12px;margin-top:15px;padding:10px;border-radius:5px}
 
-        .form-group select,
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            background: #222222;
-            color: #FFFFFF;
-            border: 2px solid #333333;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: border-color 0.3s ease;
-        }
+    .contact-section{background:#1525FD;color:#fff;padding:30px}
+    .contact-title{font-size:18px;font-weight:700;margin-bottom:20px;text-align:center}
+    .contact-form{display:grid;gap:20px}
+    .contact-form input,.contact-form textarea{padding:12px;background:#fff;color:#000;border:none;border-radius:8px;font-size:14px}
+    .submit-btn{
+      background:linear-gradient(135deg,#ADFE02,#8bc34a);color:#000;padding:15px 30px;border:none;border-radius:8px;
+      font-size:16px;font-weight:700;cursor:pointer;transition:transform .2s ease,box-shadow .2s ease
+    }
+    .submit-btn:hover{transform:translateY(-2px);box-shadow:0 8px 20px rgba(173,254,2,.3)}
+    .submit-btn:disabled{background:#95a5a6;cursor:not-allowed}
 
-        .form-group select:focus,
-        .form-group input:focus {
-            outline: none;
-            border-color: #1525FD;
-            box-shadow: 0 0 0 3px rgba(21, 37, 253, 0.1);
-        }
+    .hidden{display:none}
 
-        .toggle-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 25px;
-        }
-
-        .toggle {
-            position: relative;
-            width: 60px;
-            height: 30px;
-            background: #ddd;
-            border-radius: 15px;
-            cursor: pointer;
-            transition: background 0.3s ease;
-        }
-
-        .toggle.active {
-            background: #ADFE02;
-        }
-
-        .toggle::after {
-            content: '';
-            position: absolute;
-            top: 3px;
-            left: 3px;
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            transition: transform 0.3s ease;
-        }
-
-        .toggle.active::after {
-            transform: translateX(30px);
-        }
-
-        .toggle-label {
-            font-weight: 700;
-            color: #FFFFFF;
-            font-size: 14px;
-        }
-
-        .add-service-btn {
-            background: #1525FD;
-            color: white;
-            border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            transition: background 0.3s ease;
-        }
-
-        .add-service-btn:hover {
-            background: #0f1db8;
-            box-shadow: 0 0 10px #ADFE02;
-        }
-
-        .add-service-btn:disabled {
-            background: #95a5a6;
-            cursor: not-allowed;
-        }
-
-        .breakdown-section {
-            background: #111111;
-            color: #FFFFFF;
-            padding: 25px;
-            margin: 20px 0;
-            border-radius: 8px;
-            border-left: 5px solid #1525FD;
-        }
-
-        .breakdown-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #FFFFFF;
-            margin-bottom: 15px;
-        }
-
-        .service-breakdown {
-            margin-bottom: 25px;
-        }
-
-        .service-breakdown-title {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1525FD;
-            margin-bottom: 10px;
-        }
-
-        .breakdown-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-
-        .breakdown-table th,
-        .breakdown-table td {
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #333333;
-        }
-
-        .breakdown-table th {
-            background: #1525FD;
-            color: #FFFFFF;
-            font-weight: 700;
-        }
-
-        .discount-row {
-            border-left: 3px solid #ADFE02;
-            padding-left: 5px;
-        }
-
-        .savings {
-            color: #ADFE02 !important;
-            font-weight: 700;
-        }
-
-        .total-row {
-            font-weight: 700;
-            font-size: 16px;
-            background: #111111;
-            color: #FFFFFF;
-            box-shadow: 0 2px 4px rgba(173, 254, 2, 0.2);
-            border: 1px solid #ADFE02;
-        }
-
-        .grand-total-section {
-            background: #1525FD;
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-        }
-
-        .quote-card {
-            background: #111111;
-            border: 2px solid #1525FD;
-            color: #FFFFFF;
-            border-radius: 8px;
-            padding: 20px;
-            margin: 20px 0;
-        }
-
-        .quote-summary {
-            font-size: 14px;
-            margin-bottom: 15px;
-            color: #FFFFFF;
-        }
-
-        .disclaimer {
-            font-style: italic;
-            color: #CCCCCC;
-            background: #222222;
-            font-size: 12px;
-            margin-top: 15px;
-            padding: 10px;
-            border-radius: 5px;
-        }
-
-        .contact-section {
-            background: #1525FD;
-            color: #FFFFFF;
-            padding: 30px;
-        }
-
-        .contact-title {
-            font-size: 18px;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-align: center;
-        }
-
-        .contact-form {
-            display: grid;
-            gap: 20px;
-        }
-
-        .contact-form input,
-        .contact-form textarea {
-            padding: 12px;
-            background: #FFFFFF;
-            color: #000000;
-            border: none;
-            border-radius: 8px;
-            font-size: 14px;
-        }
-
-        .submit-btn {
-            background: linear-gradient(135deg, #ADFE02, #8bc34a);
-            color: #000000;
-            padding: 15px 30px;
-            border: none;
-            border-radius: 8px;
-            font-size: 16px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
-
-        .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(173, 254, 2, 0.3);
-        }
-
-        .submit-btn:disabled {
-            background: #95a5a6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .hidden {
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            body {
-                padding: 10px;
-            }
-            
-            .header h1 {
-                font-size: 16px;
-            }
-            
-            .form-section,
-            .contact-section {
-                padding: 20px;
-            }
-            
-            .breakdown-table {
-                font-size: 12px;
-            }
-        }
-    </style>
+    @media (max-width:768px){
+      body{padding:10px}
+      .header h1{font-size:16px}
+      .form-section,.contact-section{padding:20px}
+      .breakdown-table{font-size:12px}
+    }
+  </style>
 </head>
 <body>
-    <div class="calculator-container">
-        <div class="header">
-            <h1>Get Your Personalized Quote - Nothing Less Than Progress</h1>
-        </div>
-
-        <div class="form-section">
-            <div id="servicesContainer">
-                <div class="service-container" data-service-id="0">
-                    <div class="service-header">
-                        <div class="service-title">Service 1</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="serviceType-0">Service Type</label>
-                        <select id="serviceType-0" data-service-id="0">
-                            <option value="">Select a service...</option>
-                            <option value="online-basic">Online Basic Tier 1 ($250/mo)</option>
-                            <option value="online-advanced">Online Advanced Tier 2 ($300/mo)</option>
-                            <option value="online-contest">Contest Prep & Transformation Tier 3 ($350 final month + custom challenges)</option>
-                            <option value="inperson-individual">1-on-1 In-Person Training (60 min, $60/session)</option>
-                            <option value="inperson-group">Group In-Person Training (60 min, scalable)</option>
-                        </select>
-                    </div>
-
-                    <div class="form-group">
-                        <label for="duration-0" id="durationLabel-0">Duration</label>
-                        <input type="number" id="duration-0" data-service-id="0" min="1" max="15" value="1" oninvalid="this.value=1; this.dispatchEvent(new Event('input'))" placeholder="Enter duration">
-                    </div>
-
-                    <div class="form-group hidden" id="groupSizeGroup-0">
-                        <label for="groupSize-0">Group Size</label>
-                        <select id="groupSize-0" data-service-id="0">
-                            <option value="1">1 person</option>
-                            <option value="2">2 people</option>
-                            <option value="3">3 people</option>
-                            <option value="4">4 people</option>
-                            <option value="5">5 people</option>
-                        </select>
-                    </div>
-
-                    <div class="toggle-container hidden" id="returningToggleContainer-0">
-                        <div class="toggle" id="returningToggle-0" data-service-id="0" role="switch" aria-label="Returning Client toggle" aria-checked="false"></div>
-                        <span class="toggle-label">Returning Client? (Unlocks extra discounts)</span>
-                    </div>
-                </div>
-            </div>
-
-            <button class="add-service-btn" id="addServiceBtn">Add Another Service</button>
-
-            <div class="breakdown-section" id="breakdownSection" style="display: none;">
-                <div class="breakdown-title">Price Breakdown</div>
-                <div id="serviceBreakdowns"></div>
-                <div class="grand-total-section" id="grandTotalSection"></div>
-            </div>
-
-            <div class="quote-card" id="quoteCard" style="display: none;">
-                <div class="quote-summary" id="quoteSummary"></div>
-                <div class="disclaimer">
-                    This is an estimate. Final pricing after consultation/intake form. Subject to change based on your goals.
-                </div>
-            </div>
-        </div>
-
-        <div class="contact-section">
-            <div class="contact-title">Save & Email Your Quote</div>
-            <div class="contact-form">
-                <input type="text" id="clientName" placeholder="Your Name (required)" required>
-                <input type="email" id="clientEmail" placeholder="Your Email (required)" required>
-                <input type="text" id="referral" placeholder="Referred by (name/email)?">
-                <textarea id="comments" placeholder="Any comments or questions for your coach?" rows="4" maxlength="500"></textarea>
-                <button class="submit-btn" id="submitBtn">Save & Email Quote</button>
-            </div>
-        </div>
+  <div class="calculator-container">
+    <div class="header">
+      <h1>Get Your Personalized Quote - Nothing Less Than Progress</h1>
     </div>
 
-    <script>
-        let serviceCount = 1;
-        let services = {};
+    <div class="form-section">
+      <div id="servicesContainer">
+        <div class="service-container" data-service-id="0">
+          <div class="service-header">
+            <div class="service-title">Service 1</div>
+          </div>
 
-        const servicePricing = {
-            'online-basic': { base: 250, type: 'online', name: 'Online Basic Tier 1 ($250/mo)' },
-            'online-advanced': { base: 300, type: 'online', name: 'Online Advanced Tier 2 ($300/mo)' },
-            'online-contest': { base: 350, type: 'online', name: 'Contest Prep & Transformation Tier 3 ($350 final month + custom challenges) (Specialized for contest preparation and personalized transformation challenges)' },
-            'inperson-individual': { base: 60, type: 'inperson', name: '1-on-1 In-Person Training (60 min, $60/session)' },
-            'inperson-group': { base: 60, type: 'inperson-group', name: 'Group In-Person Training (60 min, scalable)' }
-        };
+          <div class="form-group">
+            <label for="serviceType-0">Service Type</label>
+            <select id="serviceType-0" data-service-id="0">
+              <option value="">Select a service...</option>
+              <option value="online-basic">Online Basic Tier 1 ($250/mo)</option>
+              <option value="online-advanced">Online Advanced Tier 2 ($300/mo)</option>
+              <option value="online-contest">Contest Prep & Transformation Tier 3 ($350 final month + custom challenges)</option>
+              <option value="inperson-individual">1-on-1 In-Person Training (60 min, $60/session)</option>
+              <option value="inperson-group">Group In-Person Training (60 min, scalable)</option>
+            </select>
+          </div>
 
-        const groupPricing = {
-            2: { total: 120, perPerson: 60 },
-            3: { total: 135, perPerson: 45 },
-            4: { total: 140, perPerson: 35 },
-            5: { total: 150, perPerson: 30 }
-        };
+          <div class="form-group">
+            <label for="duration-0" id="durationLabel-0">Duration</label>
+            <input type="number" id="duration-0" data-service-id="0" min="1" max="15" value="1" oninvalid="this.value=1; this.dispatchEvent(new Event('input'))" placeholder="Enter duration" />
+          </div>
 
-        initializeService(0);
+          <div class="form-group hidden" id="groupSizeGroup-0">
+            <label for="groupSize-0">Group Size</label>
+            <select id="groupSize-0" data-service-id="0">
+              <option value="1">1 person</option>
+              <option value="2">2 people</option>
+              <option value="3">3 people</option>
+              <option value="4">4 people</option>
+              <option value="5">5 people</option>
+            </select>
+          </div>
 
-        function initializeService(serviceId) {
-            services[serviceId] = {
-                isReturning: false,
-                calculation: null
-            };
+          <div class="toggle-container hidden" id="returningToggleContainer-0">
+            <div class="toggle" id="returningToggle-0" data-service-id="0" role="switch" aria-label="Returning Client toggle" aria-checked="false"></div>
+            <span class="toggle-label">Returning Client? (Unlocks extra discounts)</span>
+          </div>
+        </div>
+      </div>
 
-            const typeSelect = document.getElementById(`serviceType-${serviceId}`);
-            typeSelect.addEventListener('change', () => handleServiceChange(serviceId));
-            document.getElementById(`duration-${serviceId}`).addEventListener('input', () => calculatePrice(serviceId));
-            document.getElementById(`groupSize-${serviceId}`).addEventListener('change', () => calculatePrice(serviceId));
-            document.getElementById(`returningToggle-${serviceId}`).addEventListener('click', () => toggleReturning(serviceId));
+      <button class="add-service-btn" id="addServiceBtn">Add Another Service</button>
+
+      <div class="breakdown-section" id="breakdownSection" style="display:none;">
+        <div class="breakdown-title">Price Breakdown</div>
+        <div id="serviceBreakdowns"></div>
+        <div class="grand-total-section" id="grandTotalSection"></div>
+      </div>
+
+      <div class="quote-card" id="quoteCard" style="display:none;">
+        <div class="quote-summary" id="quoteSummary"></div>
+        <div class="disclaimer">
+          This is an estimate. Final pricing after consultation/intake form. Subject to change based on your goals.
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-section">
+      <div class="contact-title">Save & Email Your Quote</div>
+      <div class="contact-form">
+        <input type="text" id="clientName" placeholder="Your Name (required)" required />
+        <input type="email" id="clientEmail" placeholder="Your Email (required)" required />
+        <input type="text" id="referral" placeholder="Referred by (name/email)?" />
+        <textarea id="comments" placeholder="Any comments or questions for your coach?" rows="4" maxlength="500"></textarea>
+        <button class="submit-btn" id="submitBtn">Save & Email Quote</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let serviceCount = 1;
+    let services = {};
+
+    const servicePricing = {
+      'online-basic': { base: 250, type: 'online', name: 'Online Basic Tier 1 ($250/mo)' },
+      'online-advanced': { base: 300, type: 'online', name: 'Online Advanced Tier 2 ($300/mo)' },
+      'online-contest': { base: 350, type: 'online', name: 'Contest Prep & Transformation Tier 3 ($350 final month + custom challenges) (Specialized for contest preparation and personalized transformation challenges)' },
+      'inperson-individual': { base: 60, type: 'inperson', name: '1-on-1 In-Person Training (60 min, $60/session)' },
+      'inperson-group': { base: 60, type: 'inperson-group', name: 'Group In-Person Training (60 min, scalable)' }
+    };
+
+    const groupPricing = {
+      2: { total: 120, perPerson: 60 },
+      3: { total: 135, perPerson: 45 },
+      4: { total: 140, perPerson: 35 },
+      5: { total: 150, perPerson: 30 }
+    };
+
+    // Init first service block
+    initializeService(0);
+
+    // ▶ Ensure the Add button actually adds a new service block
+    document.getElementById('addServiceBtn').addEventListener('click', addService);
+
+    function initializeService(serviceId) {
+      services[serviceId] = { isReturning: false, calculation: null };
+
+      const typeSelect = document.getElementById(`serviceType-${serviceId}`);
+      typeSelect.addEventListener('change', () => handleServiceChange(serviceId));
+      document.getElementById(`duration-${serviceId}`).addEventListener('input', () => calculatePrice(serviceId));
+
+      // optional inputs may not exist yet if hidden
+      const groupSel = document.getElementById(`groupSize-${serviceId}`);
+      if (groupSel) groupSel.addEventListener('change', () => calculatePrice(serviceId));
+
+      const toggle = document.getElementById(`returningToggle-${serviceId}`);
+      if (toggle) toggle.addEventListener('click', () => toggleReturning(serviceId));
+    }
+
+    function addService() {
+      if (serviceCount >= 5) return;
+
+      const container = document.getElementById('servicesContainer');
+      const serviceHtml = `
+        <div class="service-container" data-service-id="${serviceCount}">
+          <div class="service-header">
+            <div class="service-title">Service ${serviceCount + 1}</div>
+            <button class="remove-service-btn" onclick="removeService(${serviceCount})">Remove</button>
+          </div>
+
+          <div class="form-group">
+            <label for="serviceType-${serviceCount}">Service Type</label>
+            <select id="serviceType-${serviceCount}" data-service-id="${serviceCount}">
+              <option value="">Select a service...</option>
+              <option value="online-basic">Online Basic Tier 1 ($250/mo)</option>
+              <option value="online-advanced">Online Advanced Tier 2 ($300/mo)</option>
+              <option value="online-contest">Contest Prep & Transformation Tier 3 ($350 final month + custom challenges)</option>
+              <option value="inperson-individual">1-on-1 In-Person Training (60 min, $60/session)</option>
+              <option value="inperson-group">Group In-Person Training (60 min, scalable)</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="duration-${serviceCount}" id="durationLabel-${serviceCount}">Duration</label>
+            <input type="number" id="duration-${serviceCount}" data-service-id="${serviceCount}" min="1" max="15" value="1" oninvalid="this.value=1; this.dispatchEvent(new Event('input'))" placeholder="Enter duration" />
+          </div>
+
+          <div class="form-group hidden" id="groupSizeGroup-${serviceCount}">
+            <label for="groupSize-${serviceCount}">Group Size</label>
+            <select id="groupSize-${serviceCount}" data-service-id="${serviceCount}">
+              <option value="1">1 person</option>
+              <option value="2">2 people</option>
+              <option value="3">3 people</option>
+              <option value="4">4 people</option>
+              <option value="5">5 people</option>
+            </select>
+          </div>
+
+          <div class="toggle-container hidden" id="returningToggleContainer-${serviceCount}">
+            <div class="toggle" id="returningToggle-${serviceCount}" data-service-id="${serviceCount}" role="switch" aria-label="Returning Client toggle" aria-checked="false"></div>
+            <span class="toggle-label">Returning Client? (Unlocks extra discounts)</span>
+          </div>
+        </div>
+      `;
+
+      container.insertAdjacentHTML('beforeend', serviceHtml);
+      initializeService(serviceCount);
+      serviceCount++;
+
+      document.getElementById('addServiceBtn').disabled = serviceCount >= 5;
+    }
+
+    function removeService(serviceId) {
+      const el = document.querySelector(`[data-service-id="${serviceId}"]`);
+      if (el) el.remove();
+      delete services[serviceId];
+      document.getElementById('addServiceBtn').disabled = false;
+      calculateAllPrices();
+    }
+
+    function handleServiceChange(serviceId) {
+      const serviceType = document.getElementById(`serviceType-${serviceId}`).value;
+      const groupSizeGroup = document.getElementById(`groupSizeGroup-${serviceId}`);
+      const returningToggleContainer = document.getElementById(`returningToggleContainer-${serviceId}`);
+      const labelEl = document.getElementById(`durationLabel-${serviceId}`);
+
+      if (serviceType.startsWith('online')) labelEl.textContent = 'Number of Months';
+      else if (serviceType.startsWith('inperson')) labelEl.textContent = 'Number of Sessions';
+      else labelEl.textContent = 'Duration';
+
+      if (serviceType === 'inperson-group') groupSizeGroup.classList.remove('hidden');
+      else groupSizeGroup.classList.add('hidden');
+
+      if (serviceType === 'online-advanced' || serviceType === 'online-contest') {
+        returningToggleContainer.classList.remove('hidden');
+      } else {
+        returningToggleContainer.classList.add('hidden');
+        services[serviceId].isReturning = false;
+        const t = document.getElementById(`returningToggle-${serviceId}`);
+        if (t) {
+          t.classList.remove('active');
+          t.setAttribute('aria-checked','false');
         }
+      }
 
-        function addService() {
-            if (serviceCount >= 5) return;
+      calculatePrice(serviceId);
+    }
 
-            const container = document.getElementById('servicesContainer');
-            const serviceHtml = `
-                <div class="service-container" data-service-id="${serviceCount}">
-                    <div class="service-header">
-                        <div class="service-title">Service ${serviceCount + 1}</div>
-                        <button class="remove-service-btn" onclick="removeService(${serviceCount})">Remove</button>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="serviceType-${serviceCount}">Service Type</label>
-                        <select id="serviceType-${serviceCount}" data-service-id="${serviceCount}">
-                            <option value="">Select a service...</option>
-                            <option value="online-basic">Online Basic Tier 1 ($250/mo)</option>
-                            <option value="online-advanced">Online Advanced Tier 2 ($300/mo)</option>
-                            <option value="online-contest">Contest Prep & Transformation Tier 3 ($350 final month + custom challenges)</option>
-                            <option value="inperson-individual">1-on-1 In-Person Training (60 min, $60/session)</option>
-                            <option value="inperson-group">Group In-Person Training (60 min, scalable)</option>
-                        </select>
-                    </div>
+    function toggleReturning(serviceId) {
+      const toggle = document.getElementById(`returningToggle-${serviceId}`);
+      services[serviceId].isReturning = !services[serviceId].isReturning;
+      toggle.classList.toggle('active', services[serviceId].isReturning);
+      toggle.setAttribute('aria-checked', services[serviceId].isReturning ? 'true' : 'false');
+      calculatePrice(serviceId);
+    }
 
-                    <div class="form-group">
-                        <label for="duration-${serviceCount}" id="durationLabel-${serviceCount}">Duration</label>
-                        <input type="number" id="duration-${serviceCount}" data-service-id="${serviceCount}" min="1" max="15" value="1" oninvalid="this.value=1; this.dispatchEvent(new Event('input'))" placeholder="Enter duration">
-                    </div>
+    function calculatePrice(serviceId) {
+      const serviceType = document.getElementById(`serviceType-${serviceId}`).value;
+      let duration = parseInt(document.getElementById(`duration-${serviceId}`).value) || 1;
+      if (duration < 1) duration = 1;
+      const groupSizeEl = document.getElementById(`groupSize-${serviceId}`);
+      const groupSize = groupSizeEl ? (parseInt(groupSizeEl.value) || 1) : 1;
 
-                    <div class="form-group hidden" id="groupSizeGroup-${serviceCount}">
-                        <label for="groupSize-${serviceCount}">Group Size</label>
-                        <select id="groupSize-${serviceCount}" data-service-id="${serviceCount}">
-                            <option value="1">1 person</option>
-                            <option value="2">2 people</option>
-                            <option value="3">3 people</option>
-                            <option value="4">4 people</option>
-                            <option value="5">5 people</option>
-                        </select>
-                    </div>
+      if (!serviceType) {
+        services[serviceId].calculation = null;
+        calculateAllPrices();
+        return;
+      }
 
-                    <div class="toggle-container hidden" id="returningToggleContainer-${serviceCount}">
-                        <div class="toggle" id="returningToggle-${serviceCount}" data-service-id="${serviceCount}" role="switch" aria-label="Returning Client toggle" aria-checked="false"></div>
-                        <span class="toggle-label">Returning Client? (Unlocks extra discounts)</span>
-                    </div>
-                </div>
-            `;
+      const service = servicePricing[serviceType];
+      let subtotal = 0;
+      let baseDescription = '';
 
-            container.insertAdjacentHTML('beforeend', serviceHtml);
-            initializeService(serviceCount);
-            serviceCount++;
+      if (service.type === 'online') {
+        subtotal = service.base * duration;
+        baseDescription = `$${service.base}/month × ${duration} month${duration>1?'s':''}`;
+      } else if (service.type === 'inperson') {
+        subtotal = service.base * duration;
+        baseDescription = `$${service.base}/session × ${duration} session${duration>1?'s':''}`;
+      } else if (service.type === 'inperson-group') {
+        const groupRate = groupPricing[groupSize] || { total: service.base * groupSize, perPerson: service.base };
+        subtotal = groupRate.total * duration;
+        baseDescription = `$${groupRate.total}/session (${groupSize} people) × ${duration} session${duration>1?'s':''}`;
+      }
 
-            document.getElementById('addServiceBtn').disabled = serviceCount >= 5;
-        }
+      // Package discounts
+      let packageDiscountPercent = 0;
+      if (service.type === 'online') {
+        if (serviceType === 'online-basic') {
+          if (duration >= 3) packageDiscountPercent = 20;
+          else if (duration >= 2) packageDiscountPercent = 10;
+        } else if (serviceType === 'online-advanced') {
+          if (duration >= 3) packageDiscountPercent = 25;
+          else if (duration >= 2) packageDiscountPercent = 17;
+        } // Tier 3: none
+      } else {
+        if (duration >= 15) packageDiscountPercent = 20;
+        else if (duration >= 10) packageDiscountPercent = 15;
+        else if (duration >= 5) packageDiscountPercent = 10;
+      }
 
-        function removeService(serviceId) {
-            const serviceElement = document.querySelector(`[data-service-id="${serviceId}"]`);
-            serviceElement.remove();
-            delete services[serviceId];
-            
-            document.getElementById('addServiceBtn').disabled = false;
-            
-            calculateAllPrices();
-        }
+      const packageDiscountAmount = subtotal * (packageDiscountPercent / 100);
+      const packageSubtotal = subtotal - packageDiscountAmount;
 
-        function handleServiceChange(serviceId) {
-            const serviceType = document.getElementById(`serviceType-${serviceId}`).value;
-            const groupSizeGroup = document.getElementById(`groupSizeGroup-${serviceId}`);
-            const returningToggleContainer = document.getElementById(`returningToggleContainer-${serviceId}`);
-            const labelEl = document.getElementById(`durationLabel-${serviceId}`);
-            
-            if (serviceType.startsWith('online')) {
-                labelEl.textContent = 'Number of Months';
-            } else if (serviceType.startsWith('inperson')) {
-                labelEl.textContent = 'Number of Sessions';
-            } else {
-                labelEl.textContent = 'Duration';
-            }
-            
-            if (serviceType === 'inperson-group') {
-                groupSizeGroup.classList.remove('hidden');
-            } else {
-                groupSizeGroup.classList.add('hidden');
-            }
-            
-            if (serviceType === 'online-advanced' || serviceType === 'online-contest') {
-                returningToggleContainer.classList.remove('hidden');
-            } else {
-                returningToggleContainer.classList.add('hidden');
-                services[serviceId].isReturning = false;
-                document.getElementById(`returningToggle-${serviceId}`).classList.remove('active');
-                document.getElementById(`returningToggle-${serviceId}`).setAttribute('aria-checked', 'false');
-            }
-            
-            calculatePrice(serviceId);
-        }
+      // Returning discounts (Tier 2 or Tier 3 only)
+      let returningDiscountPercent = 0;
+      if (services[serviceId].isReturning && (serviceType === 'online-advanced' || serviceType === 'online-contest')) {
+        if (duration >= 3) returningDiscountPercent = 14;
+        else if (duration >= 2) returningDiscountPercent = 7;
+      }
 
-        function toggleReturning(serviceId) {
-            const toggle = document.getElementById(`returningToggle-${serviceId}`);
-            services[serviceId].isReturning = !services[serviceId].isReturning;
-            toggle.classList.toggle('active', services[serviceId].isReturning);
-            toggle.setAttribute('aria-checked', services[serviceId].isReturning ? 'true' : 'false');
-            calculatePrice(serviceId);
-        }
+      const returningDiscountAmount = packageSubtotal * (returningDiscountPercent / 100);
+      const finalTotal = packageSubtotal - returningDiscountAmount;
+      const totalSavings = packageDiscountAmount + returningDiscountAmount;
+      const totalSavingsPercent = totalSavings > 0 ? ((totalSavings / subtotal) * 100).toFixed(1) : 0;
 
-        function calculatePrice(serviceId) {
-            const serviceType = document.getElementById(`serviceType-${serviceId}`).value;
-            let duration = parseInt(document.getElementById(`duration-${serviceId}`).value) || 1;
-            if (duration < 1) duration = 1;
-            const groupSize = parseInt(document.getElementById(`groupSize-${serviceId}`).value) || 1;
+      services[serviceId].calculation = {
+        service: service.name,
+        duration,
+        groupSize: service.type === 'inperson-group' ? groupSize : null,
+        isReturning: services[serviceId].isReturning,
+        subtotal,
+        packageDiscountPercent,
+        packageDiscountAmount,
+        returningDiscountPercent,
+        returningDiscountAmount,
+        finalTotal,
+        totalSavings,
+        totalSavingsPercent,
+        baseDescription
+      };
 
-            if (!serviceType) {
-                services[serviceId].calculation = null;
-                calculateAllPrices();
-                return;
-            }
+      calculateAllPrices();
+    }
 
-            const service = servicePricing[serviceType];
-            let subtotal = 0;
-            let baseDescription = '';
+    function calculateAllPrices() {
+      const validServices = Object.values(services).filter(s => s.calculation);
 
-            if (service.type === 'online') {
-                subtotal = service.base * duration;
-                baseDescription = `$${service.base}/month × ${duration} months`;
-            } else if (service.type === 'inperson') {
-                subtotal = service.base * duration;
-                baseDescription = `$${service.base}/session × ${duration} sessions`;
-            } else if (service.type === 'inperson-group') {
-                const groupRate = groupPricing[groupSize] || { total: service.base * groupSize, perPerson: service.base };
-                subtotal = groupRate.total * duration;
-                baseDescription = `$${groupRate.total}/session (${groupSize} people) × ${duration} sessions`;
-            }
+      if (validServices.length === 0) {
+        document.getElementById('breakdownSection').style.display = 'none';
+        document.getElementById('quoteCard').style.display = 'none';
+        return;
+      }
 
-            let packageDiscountPercent = 0;
-            if (service.type === 'online') {
-                if (serviceType === 'online-basic') {
-                    if (duration >= 3) packageDiscountPercent = 20;
-                    else if (duration >= 2) packageDiscountPercent = 10;
-                } else if (serviceType === 'online-advanced') {
-                    if (duration >= 3) packageDiscountPercent = 25;
-                    else if (duration >= 2) packageDiscountPercent = 17;
-                } // Tier 3 no package discount
-            } else {
-                if (duration >= 15) packageDiscountPercent = 20;
-                else if (duration >= 10) packageDiscountPercent = 15;
-                else if (duration >= 5) packageDiscountPercent = 10;
-            }
+      let breakdownHtml = '';
+      let grandSubtotal = 0;
+      let grandTotal = 0;
+      let grandSavings = 0;
 
-            const packageDiscountAmount = subtotal * (packageDiscountPercent / 100);
-            const packageSubtotal = subtotal - packageDiscountAmount;
+      Object.values(services).forEach(serviceData => {
+        if (!serviceData.calculation) return;
+        const c = serviceData.calculation;
 
-            let returningDiscountPercent = 0;
-            if (services[serviceId].isReturning && (serviceType === 'online-advanced' || serviceType === 'online-contest')) {
-                if (duration >= 3) returningDiscountPercent = 14;
-                else if (duration >= 2) returningDiscountPercent = 7;
-            }
+        grandSubtotal += c.subtotal;
+        grandTotal += c.finalTotal;
+        grandSavings += c.totalSavings;
 
-            const returningDiscountAmount = packageSubtotal * (returningDiscountPercent / 100);
-            const finalTotal = packageSubtotal - returningDiscountAmount;
-            const totalSavings = packageDiscountAmount + returningDiscountAmount;
-            const totalSavingsPercent = totalSavings > 0 ? ((totalSavings / subtotal) * 100).toFixed(1) : 0;
+        breakdownHtml += `
+          <div class="service-breakdown">
+            <div class="service-breakdown-title">${c.service}</div>
+            <table class="breakdown-table">
+              <tbody>
+                <tr>
+                  <td>Base Cost</td>
+                  <td>${c.baseDescription}</td>
+                  <td>$${c.subtotal.toFixed(2)}</td>
+                </tr>
+                ${c.packageDiscountAmount>0?`
+                  <tr class="discount-row">
+                    <td>Package Discount</td>
+                    <td>${c.packageDiscountPercent}% off</td>
+                    <td class="savings">-$${c.packageDiscountAmount.toFixed(2)}</td>
+                  </tr>`:''}
+                ${c.returningDiscountAmount>0?`
+                  <tr class="discount-row">
+                    <td>Returning Client Discount</td>
+                    <td>${c.returningDiscountPercent}% off</td>
+                    <td class="savings">-$${c.returningDiscountAmount.toFixed(2)}</td>
+                  </tr>`:''}
+                <tr class="total-row">
+                  <td>Service Total</td>
+                  <td></td>
+                  <td>$${c.finalTotal.toFixed(2)}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        `;
+      });
 
-            services[serviceId].calculation = {
-                service: service.name,
-                duration,
-                groupSize: service.type === 'inperson-group' ? groupSize : null,
-                isReturning: services[serviceId].isReturning,
-                subtotal,
-                packageDiscountPercent,
-                packageDiscountAmount,
-                returningDiscountPercent,
-                returningDiscountAmount,
-                finalTotal,
-                totalSavings,
-                totalSavingsPercent,
-                baseDescription
-            };
+      document.getElementById('serviceBreakdowns').innerHTML = breakdownHtml;
 
-            calculateAllPrices();
-        }
+      const taxAmount = grandTotal * 0.06;
+      const finalAmount = grandTotal + taxAmount;
+      const grandSavingsPercent = grandSavings > 0 ? ((grandSavings / grandSubtotal) * 100).toFixed(1) : 0;
 
-        function calculateAllPrices() {
-            const validServices = Object.values(services).filter(s => s.calculation);
-            
-            if (validServices.length === 0) {
-                document.getElementById('breakdownSection').style.display = 'none';
-                document.getElementById('quoteCard').style.display = 'none';
-                return;
-            }
+      // GRAND TOTAL: only show ONE savings line (with % + amount)
+      const grandTotalHtml = `
+        <table class="breakdown-table">
+          <thead>
+            <tr>
+              <th>Grand Total Summary</th>
+              <th></th>
+              <th>Amount</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Combined Subtotal</td>
+              <td></td>
+              <td>$${grandSubtotal.toFixed(2)}</td>
+            </tr>
+            <tr class="total-row">
+              <td><strong>GRAND TOTAL</strong></td>
+              <td></td>
+              <td><strong>$${grandTotal.toFixed(2)}</strong></td>
+            </tr>
+            <tr class="discount-row">
+              <td>KY Sales Tax (6%)</td>
+              <td></td>
+              <td class="savings">+$${taxAmount.toFixed(2)}</td>
+            </tr>
+            <tr class="total-row">
+              <td><strong>FINAL TOTAL (incl. tax)</strong></td>
+              <td></td>
+              <td><strong>$${finalAmount.toFixed(2)}</strong></td>
+            </tr>
+            ${grandSavings>0?`
+              <tr>
+                <td><strong>Total Savings</strong></td>
+                <td>${grandSavingsPercent}% saved</td>
+                <td class="savings"><strong>$${grandSavings.toFixed(2)}</strong></td>
+              </tr>`:''}
+          </tbody>
+        </table>
+      `;
+      document.getElementById('grandTotalSection').innerHTML = grandTotalHtml;
+      document.getElementById('breakdownSection').style.display = 'block';
 
-            let breakdownHtml = '';
-            let grandSubtotal = 0;
-            let grandPackageDiscount = 0;
-            let grandReturningDiscount = 0;
-            let grandTotal = 0;
-            let grandSavings = 0;
+      updateQuoteCard();
+    }
 
-            Object.entries(services).forEach(([serviceId, serviceData]) => {
-                if (!serviceData.calculation) return;
-                
-                const calc = serviceData.calculation;
-                grandSubtotal += calc.subtotal;
-                grandPackageDiscount += calc.packageDiscountAmount;
-                grandReturningDiscount += calc.returningDiscountAmount;
-                grandTotal += calc.finalTotal;
-                grandSavings += calc.totalSavings;
+    function updateQuoteCard() {
+      const quoteSummary = document.getElementById('quoteSummary');
+      const validServices = Object.values(services).filter(s => s.calculation);
 
-                breakdownHtml += `
-                    <div class="service-breakdown">
-                        <div class="service-breakdown-title">${calc.service}</div>
-                        <table class="breakdown-table">
-                            <tbody>
-                                <tr>
-                                    <td>Base Cost</td>
-                                    <td>${calc.baseDescription}</td>
-                                    <td>$${calc.subtotal.toFixed(2)}</td>
-                                </tr>
-                `;
+      let summary = '<strong>You selected:</strong><br>';
+      validServices.forEach((s, i) => {
+        const c = s.calculation;
+        summary += `${i+1}. ${c.service} for ${c.duration} ${c.service.includes('Online') ? 'months' : 'sessions'}`;
+        if (c.groupSize && c.groupSize>1) summary += ` with Group Size ${c.groupSize}`;
+        if (c.isReturning) summary += ` as Returning Client`;
+        summary += '<br>';
+      });
 
-                if (calc.packageDiscountAmount > 0) {
-                    breakdownHtml += `
-                        <tr class="discount-row">
-                            <td>Package Discount</td>
-                            <td>${calc.packageDiscountPercent}% off</td>
-                            <td class="savings">-$${calc.packageDiscountAmount.toFixed(2)}</td>
-                        </tr>
-                    `;
-                }
+      quoteSummary.innerHTML = summary;
+      document.getElementById('quoteCard').style.display = 'block';
+    }
 
-                if (calc.returningDiscountAmount > 0) {
-                    breakdownHtml += `
-                        <tr class="discount-row">
-                            <td>Returning Client Discount</td>
-                            <td>${calc.returningDiscountPercent}% off</td>
-                            <td class="savings">-$${calc.returningDiscountAmount.toFixed(2)}</td>
-                        </tr>
-                    `;
-                }
+    function validateEmail(email){
+      const rx=/^[^\s@]+@[^\s@]+\.[^\s@]+$/;return rx.test(email);
+    }
 
-                breakdownHtml += `
-                                <tr class="total-row">
-                                    <td>Service Total</td>
-                                    <td></td>
-                                    <td>$${calc.finalTotal.toFixed(2)}</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                `;
-            });
+    document.getElementById('submitBtn').addEventListener('click', submitQuote);
 
-            document.getElementById('serviceBreakdowns').innerHTML = breakdownHtml;
+    function submitQuote(){
+      const name=document.getElementById('clientName').value.trim();
+      const email=document.getElementById('clientEmail').value.trim();
+      const referral=document.getElementById('referral').value.trim();
+      const comments=document.getElementById('comments').value.trim();
 
-            const taxAmount = grandTotal * 0.06;
-            const finalAmount = grandTotal + taxAmount;
-            const grandSavingsPercent = grandSavings > 0 ? ((grandSavings / grandSubtotal) * 100).toFixed(1) : 0;
+      if(!name){alert('Please enter your name.');return;}
+      if(!email || !validateEmail(email)){alert('Please enter a valid email address.');return;}
 
-            let grandTotalHtml = `
-                <table class="breakdown-table">
-                    <thead>
-                        <tr>
-                            <th>Grand Total Summary</th>
-                            <th></th>
-                            <th>Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td>Combined Subtotal</td>
-                            <td></td>
-                            <td>$${grandSubtotal.toFixed(2)}</td>
-                        </tr>
-            `;
+      const validServices=Object.values(services).filter(s=>s.calculation);
+      if(validServices.length===0){alert('Please complete at least one service calculation.');return;}
 
-            if (grandPackageDiscount > 0) {
-                grandTotalHtml += `
-                    <tr class="discount-row">
-                        <td>Total Package Discounts</td>
-                        <td></td>
-                        <td class="savings">-$${grandPackageDiscount.toFixed(2)}</td>
-                    </tr>
-                `;
-            }
+      const subject=`Fitness Coaching Quote for ${name}`;
+      let emailBody=`New pricing quote request:\n\n`;
+      emailBody+=`Client Information:\nName: ${name}\nEmail: ${email}\n`;
+      if(referral) emailBody+=`Referred by: ${referral}\n`;
+      if(comments) emailBody+=`\nComments/Questions:\n${comments}\n`;
+      emailBody+=`\nSelected Services:\n`;
 
-            if (grandReturningDiscount > 0) {
-                grandTotalHtml += `
-                    <tr class="discount-row">
-                        <td>Total Returning Client Discounts</td>
-                        <td></td>
-                        <td class="savings">-$${grandReturningDiscount.toFixed(2)}</td>
-                    </tr>
-                `;
-            }
+      let grandTotal=0;
+      let grandSavings=0;
 
-            grandTotalHtml += `
-                        <tr class="total-row">
-                            <td><strong>GRAND TOTAL</strong></td>
-                            <td></td>
-                            <td><strong>$${grandTotal.toFixed(2)}</strong></td>
-                        </tr>
-                        <tr class="discount-row">
-                            <td>KY Sales Tax (6%)</td>
-                            <td></td>
-                            <td class="savings">+$${taxAmount.toFixed(2)}</td>
-                        </tr>
-                        <tr class="total-row">
-                            <td><strong>FINAL TOTAL (incl. tax)</strong></td>
-                            <td></td>
-                            <td><strong>$${finalAmount.toFixed(2)}</strong></td>
-                        </tr>
-            `;
+      validServices.forEach((s,i)=>{
+        const c=s.calculation;
+        grandTotal+=c.finalTotal;
+        grandSavings+=c.totalSavings;
+        emailBody+=`\nService ${i+1}: ${c.service}\n`;
+        emailBody+=`Duration: ${c.duration} ${c.service.includes('Online')?'months':'sessions'}\n`;
+        if(c.groupSize && c.groupSize>1) emailBody+=`Group Size: ${c.groupSize} people\n`;
+        emailBody+=`Returning Client: ${c.isReturning?'Yes':'No'}\n`;
+        emailBody+=`Base Cost: $${c.subtotal.toFixed(2)}\n`;
+        if(c.packageDiscountAmount>0) emailBody+=`Package Discount (${c.packageDiscountPercent}%): -$${c.packageDiscountAmount.toFixed(2)}\n`;
+        if(c.returningDiscountAmount>0) emailBody+=`Returning Client Discount (${c.returningDiscountPercent}%): -$${c.returningDiscountAmount.toFixed(2)}\n`;
+        emailBody+=`Service Total: $${c.finalTotal.toFixed(2)}\n`;
+      });
 
-            if (grandSavings > 0) {
-                grandTotalHtml += `
-                    <tr>
-                        <td><strong>Total Savings</strong></td>
-                        <td>${grandSavingsPercent}% saved</td>
-                        <td class="savings"><strong>$${grandSavings.toFixed(2)}</strong></td>
-                    </tr>
-                `;
-            }
+      const taxAmount=grandTotal*0.06;
+      const finalAmount=grandTotal+taxAmount;
 
-            grandTotalHtml += `
-                    </tbody>
-                </table>
-            `;
+      emailBody+=`\nGRAND TOTAL: $${grandTotal.toFixed(2)}\n`;
+      emailBody+=`KY Sales Tax (6%): +$${taxAmount.toFixed(2)}\n`;
+      emailBody+=`FINAL TOTAL (incl. tax): $${finalAmount.toFixed(2)}\n`;
+      if(grandSavings>0) emailBody+=`Total Savings: $${grandSavings.toFixed(2)}\n`;
+      emailBody+=`\nThis is an estimate. Final pricing after consultation/intake form. Subject to change based on your goals.`;
 
-            document.getElementById('grandTotalSection').innerHTML = grandTotalHtml;
-            document.getElementById('breakdownSection').style.display = 'block';
-
-            updateQuoteCard();
-        }
-
-        function updateQuoteCard() {
-            const quoteSummary = document.getElementById('quoteSummary');
-            const validServices = Object.values(services).filter(s => s.calculation);
-            
-            let summary = '<strong>You selected:</strong><br>';
-            
-            validServices.forEach((serviceData, index) => {
-                const calc = serviceData.calculation;
-                summary += `${index + 1}. ${calc.service} for ${calc.duration} ${calc.service.includes('Online') ? 'months' : 'sessions'}`;
-                
-                if (calc.groupSize && calc.groupSize > 1) {
-                    summary += ` with Group Size ${calc.groupSize}`;
-                }
-                
-                if (calc.isReturning) {
-                    summary += ` as Returning Client`;
-                }
-                
-                summary += '<br>';
-            });
-
-            quoteSummary.innerHTML = summary;
-            document.getElementById('quoteCard').style.display = 'block';
-        }
-
-        function validateEmail(email) {
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return emailRegex.test(email);
-        }
-
-        document.getElementById('submitBtn').addEventListener('click', submitQuote);
-
-        function submitQuote() {
-            const name = document.getElementById('clientName').value.trim();
-            const email = document.getElementById('clientEmail').value.trim();
-            const referral = document.getElementById('referral').value.trim();
-            const comments = document.getElementById('comments').value.trim();
-
-            if (!name) {
-                alert('Please enter your name.');
-                return;
-            }
-
-            if (!email || !validateEmail(email)) {
-                alert('Please enter a valid email address.');
-                return;
-            }
-
-            const validServices = Object.values(services).filter(s => s.calculation);
-            if (validServices.length === 0) {
-                alert('Please complete at least one service calculation.');
-                return;
-            }
-
-            const subject = `Fitness Coaching Quote for ${name}`;
-            
-            let emailBody = `New pricing quote request:\n\n`;
-            emailBody += `Client Information:\n`;
-            emailBody += `Name: ${name}\n`;
-            emailBody += `Email: ${email}\n`;
-            if (referral) emailBody += `Referred by: ${referral}\n`;
-            if (comments) emailBody += `\nComments/Questions:\n${comments}\n`;
-            emailBody += `\n`;
-
-            emailBody += `Selected Services:\n`;
-            let grandTotal = 0;
-            let grandSavings = 0;
-            let taxAmount = 0;
-            let finalAmount = 0;
-            
-            validServices.forEach((serviceData, index) => {
-                const calc = serviceData.calculation;
-                grandTotal += calc.finalTotal;
-                grandSavings += calc.totalSavings;
-                
-                emailBody += `\nService ${index + 1}: ${calc.service}\n`;
-                emailBody += `Duration: ${calc.duration} ${calc.service.includes('Online') ? 'months' : 'sessions'}\n`;
-                if (calc.groupSize && calc.groupSize > 1) {
-                    emailBody += `Group Size: ${calc.groupSize} people\n`;
-                }
-                emailBody += `Returning Client: ${calc.isReturning ? 'Yes' : 'No'}\n`;
-                emailBody += `Base Cost: $${calc.subtotal.toFixed(2)}\n`;
-                if (calc.packageDiscountAmount > 0) {
-                    emailBody += `Package Discount (${calc.packageDiscountPercent}%): -$${calc.packageDiscountAmount.toFixed(2)}\n`;
-                }
-                if (calc.returningDiscountAmount > 0) {
-                    emailBody += `Returning Client Discount (${calc.returningDiscountPercent}%): -$${calc.returningDiscountAmount.toFixed(2)}\n`;
-                }
-                emailBody += `Service Total: $${calc.finalTotal.toFixed(2)}\n`;
-            });
-            
-            taxAmount = grandTotal * 0.06;
-            finalAmount = grandTotal + taxAmount;
-            
-            emailBody += `\nGRAND TOTAL: $${grandTotal.toFixed(2)}\n`;
-            emailBody += `KY Sales Tax (6%): +$${taxAmount.toFixed(2)}\n`;
-            emailBody += `FINAL TOTAL (incl. tax): $${finalAmount.toFixed(2)}\n`;
-            if (grandSavings > 0) {
-                emailBody += `Total Savings: $${grandSavings.toFixed(2)}\n`;
-            }
-            emailBody += `\nThis is an estimate. Final pricing after consultation/intake form. Subject to change based on your goals.`;
-
-            const mailtoLink = `mailto:NothinglessThanProgress@gmail.com?cc=${encodeURIComponent(email)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
-            
-            window.open(mailtoLink, '_blank');
-            
-            alert('Quote email has been prepared! Your email client should open with the quote details ready to send.');
-        }
-    </script>
+      const mailto=`mailto:NothinglessThanProgress@gmail.com?cc=${encodeURIComponent(email)}&subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+      window.open(mailto,'_blank');
+      alert('Quote email has been prepared! Your email client should open with the quote details ready to send.');
+    }
+  </script>
 </body>
 </html>
