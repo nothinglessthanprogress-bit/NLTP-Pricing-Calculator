@@ -226,11 +226,14 @@
             font-weight: 700;
         }
 
+        .discount-row {
+            border-left: 3px solid #ADFE02;
+            padding-left: 5px;
+        }
+
         .savings {
             color: #ADFE02 !important;
             font-weight: 700;
-            border-left: 3px solid #ADFE02;
-            padding-left: 5px;
         }
 
         .total-row {
@@ -649,13 +652,13 @@
                 return;
             }
 
+            let breakdownHtml = '';
             let grandSubtotal = 0;
             let grandPackageDiscount = 0;
             let grandReturningDiscount = 0;
             let grandTotal = 0;
             let grandSavings = 0;
 
-            let breakdownHtml = '';
             Object.entries(services).forEach(([serviceId, serviceData]) => {
                 if (!serviceData.calculation) return;
                 
