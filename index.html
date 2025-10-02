@@ -1,0 +1,555 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Nothing Less Than Progress — Pricing & Quote Calculator</title>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#000000; --fg:#ffffff; --blue:#1525FD; --green:#ADFE02; --muted:#9aa0a6; --card:#0f1115; --border:#1f2330;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;height:100%;background:var(--bg);color:var(--fg);font-family:Roboto,system-ui,-apple-system,Segoe UI,SegoeUI,Helvetica,Arial,sans-serif}
+    a{color:var(--blue)}
+    .wrap{max-width:980px;margin:0 auto;padding:20px}
+    .hdr{
+      background:var(--blue); color:#fff; text-align:center; padding:18px 12px; border-bottom:2px solid #0b18b9;
+    }
+    .hdr h1{margin:0;font-size:22px;font-weight:700}
+    .sub{margin-top:6px;font-size:14px;opacity:.95}
+    .grid{display:grid;grid-template-columns:1fr 1fr; gap:16px}
+    @media (max-width:900px){.grid{grid-template-columns:1fr}}
+    .card{
+      background:var(--card); border:1px solid var(--border); border-radius:14px; padding:16px; box-shadow:0 4px 18px rgba(0,0,0,.25);
+    }
+    .card h2{margin:0 0 12px 0; font-size:18px; color:#fff; border-bottom:1px solid var(--border); padding-bottom:8px}
+    label{display:block; font-size:14px; margin:10px 0 6px}
+    input[type="text"],input[type="email"],input[type="number"],select,textarea{
+      width:100%; background:#0b0d12; color:#fff; border:1px solid var(--border); border-radius:10px; padding:10px 12px; font-size:14px; outline:none;
+    }
+    textarea{min-height:90px; resize:vertical}
+    .row{display:flex; gap:12px}
+    .row > *{flex:1}
+    .help{color:var(--muted); font-size:12px; margin-top:4px}
+    .muted{color:var(--muted)}
+    .btn{
+      display:inline-block; appearance:none; border:none; background:var(--blue); color:#fff; padding:12px 16px; border-radius:12px; font-weight:700; cursor:pointer;
+      transition:transform .06s ease, filter .2s ease; text-decoration:none; text-align:center;
+    }
+    .btn:hover{filter:brightness(1.1)}
+    .btn:active{transform:translateY(1px)}
+    .btn.secondary{background:#0b0d12; border:1px solid var(--border); color:#e3e7ee}
+    .btn.green{background:var(--green); color:#0b0d12}
+    .sticky{
+      position:sticky; bottom:0; background:linear-gradient(180deg, rgba(0,0,0,0), rgba(0,0,0,.85) 35%, rgba(0,0,0,.95));
+      padding:12px 0 6px; margin-top:8px;
+    }
+    table{width:100%; border-collapse:collapse; margin-top:6px}
+    th,td{padding:8px 6px; border-bottom:1px solid var(--border); font-size:14px; text-align:left}
+    th{color:#cbd1da; font-weight:600}
+    .total{font-weight:800}
+    .emph{font-weight:700; color:#fff}
+    .save{color:var(--green); font-weight:700}
+    .pill{display:inline-block; padding:2px 8px; border-radius:999px; font-size:12px; border:1px solid var(--border); color:#cbd1da}
+    .disclaimer{background:#0b0d12; border:1px dashed var(--border); color:#b8bdc7; padding:10px 12px; border-radius:12px; font-size:12px}
+    .section-title{margin:16px 0 8px; font-weight:700; color:#fff}
+    .divider{height:1px; background:var(--border); margin:12px 0}
+    .footer-note{font-size:12px; color:#9aa0a6; margin-top:12px}
+    .inline{display:inline}
+    .hide{display:none !important}
+    .badge{background:#0510aa; color:#fff; padding:2px 8px; border-radius:999px; font-size:12px; margin-left:6px}
+    .greenbadge{background:var(--green); color:#0b0d12}
+    .right{text-align:right}
+  </style>
+</head>
+<body>
+  <header class="hdr">
+    <h1>Get Your Personalized Quote — Nothing Less Than Progress</h1>
+    <div class="sub">Choose your service, see live pricing, and save your quote.</div>
+  </header>
+
+  <main class="wrap">
+    <div class="grid">
+      <!-- CONTACT -->
+      <section class="card">
+        <h2>1) Contact & Referral</h2>
+        <label>Full Name <span class="pill">required</span>
+          <input id="name" type="text" placeholder="Jane Doe" required>
+        </label>
+        <label>Email <span class="pill">required</span>
+          <input id="email" type="email" placeholder="you@example.com" required>
+        </label>
+        <div class="row">
+          <label>Phone (optional)
+            <input id="phone" type="text" placeholder="(555) 123-4567">
+          </label>
+          <label>How did you hear about us?
+            <select id="refSource">
+              <option>Friend/Referral</option>
+              <option>Instagram</option>
+              <option>TikTok</option>
+              <option>Google</option>
+              <option>Walk-in</option>
+              <option>Other</option>
+            </select>
+          </label>
+        </div>
+        <label id="refNameWrap">Referrer’s Name
+          <input id="refName" type="text" placeholder="Who referred you?">
+        </label>
+      </section>
+
+      <!-- SERVICE -->
+      <section class="card">
+        <h2>2) Choose Service</h2>
+        <label>Service Type
+          <select id="service">
+            <option value="tier1">Online Coaching — Tier 1 ($250/mo)</option>
+            <option value="tier2">Online Coaching — Tier 2 ($300/mo)</option>
+            <option value="tier3">Contest Prep — Tier 3 ($350 final month)</option>
+            <option value="pt1">In-Person Training — 1-on-1</option>
+            <option value="ptg">In-Person Training — Group (2–5)</option>
+            <option value="other">Other / Not Sure Yet</option>
+          </select>
+        </label>
+        <label>Notes (optional)
+          <textarea id="notes" maxlength="500" placeholder="Any details that help us tailor your quote…"></textarea>
+        </label>
+
+        <!-- Coaching Options -->
+        <div id="coachingBlock" class="divider hide"></div>
+        <div id="coachingOptions" class="hide">
+          <!-- Tier 1/2 shared -->
+          <div id="upfrontWrap" class="row">
+            <label>Upfront Option
+              <select id="upfront">
+                <!-- dynamic options per tier -->
+              </select>
+            </label>
+            <label id="monthsWrap">Months
+              <input id="months" type="number" min="1" step="1" value="1">
+              <div class="help">Used only when Upfront = None</div>
+            </label>
+          </div>
+
+          <!-- Tier 3 specifics -->
+          <div id="tier3Wrap" class="hide">
+            <label>Returning Client Discount
+              <select id="t3ret">
+                <option value="none">None</option>
+                <option value="325">Returning: $325 (7% off; Tier 2 ×2 mo prior)</option>
+                <option value="300">Returning: $300 (14% off; Tier 2 ×3 mo prior)</option>
+              </select>
+            </label>
+            <label class="row">
+              <span class="pill">Optional</span>
+              <span style="margin-left:8px" class="muted">Transformation Challenge pricing is custom — select “Other / Not Sure Yet” if you want a contact-only quote.</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- 1-on-1 PT -->
+        <div id="pt1Block" class="divider hide"></div>
+        <div id="pt1" class="hide row">
+          <label>Session Length
+            <select id="pt1Len">
+              <option value="30">30 min ($40)</option>
+              <option value="60" selected>60 min ($60)</option>
+              <option value="90">90 min ($80)</option>
+            </select>
+          </label>
+          <label>Package
+            <select id="pt1Pack">
+              <option value="1">Single (no discount)</option>
+              <option value="5">5 Sessions (10% off)</option>
+              <option value="10">10 Sessions (15% off)</option>
+              <option value="15">15 Sessions (20% off)</option>
+            </select>
+          </label>
+        </div>
+
+        <!-- Group PT -->
+        <div id="ptgBlock" class="divider hide"></div>
+        <div id="ptg" class="hide">
+          <div class="row">
+            <label>Duration
+              <select id="ptgDur">
+                <option value="60">60 min</option>
+                <option value="90">90 min</option>
+              </select>
+            </label>
+            <label>Group Size
+              <select id="ptgSize">
+                <option value="2">2</option>
+                <option value="3" selected>3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+              </select>
+            </label>
+            <label>Package
+              <select id="ptgPack">
+                <option value="1">Single (no discount)</option>
+                <option value="5">5 Sessions (10% off)</option>
+                <option value="10">10 Sessions (15% off)</option>
+                <option value="15">15 Sessions (20% off)</option>
+              </select>
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <!-- SUMMARY -->
+      <section class="card">
+        <h2>3) Quote Summary <span id="summaryBadge" class="badge">Live</span></h2>
+        <div id="serviceSummary" class="muted">Select a service to begin.</div>
+
+        <table id="summaryTable" class="hide">
+          <tbody>
+            <tr><th>Base Calculation</th><td id="baseExpr">—</td></tr>
+            <tr><th>Subtotal (before discounts)</th><td id="subtotal">—</td></tr>
+            <tr><th>Discount(s)</th><td><span id="discLabel" class="muted">—</span></td></tr>
+            <tr><th class="save">Savings</th><td class="save" id="savingsLine">—</td></tr>
+            <tr><th class="emph">FINAL PRE-TAX TOTAL</th><td class="emph" id="finalPretax">—</td></tr>
+            <tr><th>KY Sales Tax (6%)</th><td id="tax">—</td></tr>
+            <tr><th class="total">FINAL TOTAL (WITH TAX)</th><td class="total" id="finalWithTax">—</td></tr>
+            <tr id="ppRow" class="hide"><th>Per-Person (pre / with tax)</th><td id="perPerson">—</td></tr>
+          </tbody>
+        </table>
+
+        <div class="section-title">You selected</div>
+        <div id="selectedList" class="muted">—</div>
+
+        <div class="divider"></div>
+        <div class="disclaimer"><em>This is an estimate. Final pricing is confirmed after consultation/intake. Subject to change based on goals, travel, and complexity. All coaching is prepaid.</em></div>
+      </section>
+
+      <!-- ACTIONS -->
+      <section class="card">
+        <h2>4) Save & Email Your Quote</h2>
+        <div class="row">
+          <button id="copyBtn" class="btn secondary" type="button">Copy Quote</button>
+          <a id="bookBtn" class="btn" href="https://your-consult-link.com" target="_blank" rel="noopener">Book Consult</a>
+        </div>
+        <div class="sticky">
+          <button id="emailBtn" class="btn green" type="button">Email My Quote</button>
+          <div class="footer-note">We’ll prefill an email to <strong>YOUR_EMAIL_HERE@example.com</strong> and CC the address you entered.</div>
+        </div>
+      </section>
+    </div>
+  </main>
+
+  <script>
+    // ===== CONFIG =====
+    const EMAIL_TO = "YOUR_EMAIL_HERE@example.com"; // <-- set your email
+    const BOOK_LINK = "https://your-consult-link.com"; // <-- set your scheduling link
+    document.getElementById('bookBtn').href = BOOK_LINK;
+
+    // Rates & rules
+    const TAX_RATE = 0.06;
+    const tierRates = { tier1:250, tier2:300, tier3:350 };
+    const upfrontOptions = {
+      tier1: [
+        {label:"None", value:"none"},
+        {label:"2 months upfront = $450 total (10% off)", value:"2"},
+        {label:"3 months upfront = $600 total (20% off)", value:"3"}
+      ],
+      tier2: [
+        {label:"None", value:"none"},
+        {label:"2 months upfront = $500 total (~17% off)", value:"2"},
+        {label:"3 months upfront = $675 total (25% off)", value:"3"}
+      ]
+    };
+    const upfrontTotals = {
+      tier1: {2:450, 3:600},
+      tier2: {2:500, 3:675}
+    };
+    const pt1Base = { "30":40, "60":60, "90":80 };
+    const ptgBase = {
+      "60": {2:90, 3:120, 4:140, 5:150},
+      "90": {2:130,3:180, 4:220, 5:250}
+    };
+
+    // ===== Helpers =====
+    const $ = id => document.getElementById(id);
+    const show = (el, on) => el.classList[on?"remove":"add"]("hide");
+    const money = n => "$" + (Math.round((n + Number.EPSILON)*100)/100).toFixed(2);
+    const pct = n => (Math.round(n*10)/10).toFixed(1) + "%";
+    const clamp = (v,min,max)=>Math.max(min,Math.min(max,v));
+
+    // ===== Elements =====
+    const nameEl=$("name"), emailEl=$("email"), phoneEl=$("phone");
+    const refSourceEl=$("refSource"), refNameWrap=$("refNameWrap"), refNameEl=$("refName");
+    const serviceEl=$("service"), notesEl=$("notes");
+
+    const coachingBlock=$("coachingBlock"), coachingOptions=$("coachingOptions");
+    const upfrontWrap=$("upfrontWrap"), upfrontEl=$("upfront"), monthsWrap=$("monthsWrap"), monthsEl=$("months");
+    const tier3Wrap=$("tier3Wrap"), t3retEl=$("t3ret");
+
+    const pt1Block=$("pt1Block"), pt1Wrap=$("pt1"), pt1Len=$("pt1Len"), pt1Pack=$("pt1Pack");
+    const ptgBlock=$("ptgBlock"), ptgWrap=$("ptg"), ptgDur=$("ptgDur"), ptgSize=$("ptgSize"), ptgPack=$("ptgPack");
+
+    const serviceSummary=$("serviceSummary"), summaryTable=$("summaryTable");
+    const baseExpr=$("baseExpr"), subtotalEl=$("subtotal"), discLabel=$("discLabel"), savingsLine=$("savingsLine");
+    const finalPretax=$("finalPretax"), taxEl=$("tax"), finalWithTax=$("finalWithTax");
+    const ppRow=$("ppRow"), perPerson=$("perPerson");
+    const selectedList=$("selectedList");
+
+    const copyBtn=$("copyBtn"), emailBtn=$("emailBtn");
+
+    // ===== UI Logic =====
+    function toggleRef(){
+      show(refNameWrap, refSourceEl.value==="Friend/Referral");
+    }
+
+    function setupServiceUI(){
+      const s = serviceEl.value;
+      // reset visibility
+      show(coachingBlock,false); show(coachingOptions,false); show(tier3Wrap,false); show(upfrontWrap,false);
+      show(pt1Block,false); show(pt1Wrap,false);
+      show(ptgBlock,false); show(ptgWrap,false);
+
+      if(s==="tier1"||s==="tier2"){
+        show(coachingBlock,true); show(coachingOptions,true); show(upfrontWrap,true); show(tier3Wrap,false);
+        // populate upfront options
+        upfrontEl.innerHTML = upfrontOptions[s].map(o=>`<option value="${o.value}">${o.label}</option>`).join("");
+        show(monthsWrap, upfrontEl.value==="none");
+      }else if(s==="tier3"){
+        show(coachingBlock,true); show(coachingOptions,true); show(upfrontWrap,false); show(tier3Wrap,true);
+      }else if(s==="pt1"){
+        show(pt1Block,true); show(pt1Wrap,true);
+      }else if(s==="ptg"){
+        show(ptgBlock,true); show(ptgWrap,true);
+      }else{
+        // other / not sure — no options
+      }
+    }
+
+    // ===== Calculations =====
+    function calc(){
+      const s = serviceEl.value;
+      let before=0, finalPre=0, savings=0, savingsPct=0, baseText="—", discText="—";
+      let sessions = 0, months = 0;
+      let ppPre=0, ppWith=0; // per person
+
+      if(s==="tier1"||s==="tier2"){
+        const rate = tierRates[s];
+        const up = upfrontEl.value;
+        if(up==="none"){
+          months = Math.max(1, parseInt(monthsEl.value||"1",10));
+          before = rate * months;
+          finalPre = before;
+          savings = 0;
+          savingsPct = 0;
+          baseText = `$${rate} × ${months} month${months>1?"s":""}`;
+          discText = "No upfront discount";
+        }else{
+          const m = parseInt(up,10); // 2 or 3
+          const total = upfrontTotals[s][m];
+          const beforeDisc = rate * m;
+          before = beforeDisc;
+          finalPre = total;
+          savings = beforeDisc - total;
+          savingsPct = beforeDisc>0 ? (savings / beforeDisc * 100) : 0;
+          baseText = `$${rate} × ${m} months`;
+          discText = `Upfront discount applied (${m} mo)`;
+          months = m;
+        }
+      } else if(s==="tier3"){
+        before = tierRates.tier3; // 350
+        const retSel = t3retEl.value; // none/325/300
+        let price = before;
+        if(retSel==="325") price = 325;
+        if(retSel==="300") price = 300;
+        finalPre = price;
+        savings = before - price;
+        savingsPct = before>0 ? (savings / before * 100) : 0;
+        baseText = `$350 (final prep month)`;
+        discText = (retSel==="none") ? "No returning discount" :
+                   (retSel==="325") ? "Returning discount (7%)" : "Returning discount (14%)";
+      } else if(s==="pt1"){
+        const len = pt1Len.value; // 30/60/90
+        const pack = parseInt(pt1Pack.value,10); // 1/5/10/15
+        const base = pt1Base[len];
+        sessions = pack===1 ? 1 : pack;
+        before = base * sessions;
+        const discPct = pack===1?0:(pack===5?10:(pack===10?15:20));
+        savings = before * (discPct/100);
+        finalPre = before - savings;
+        savingsPct = discPct;
+        baseText = `$${base} × ${sessions} session${sessions>1?"s":""}`;
+        discText = discPct ? `Package discount (${discPct}%)` : "No package discount";
+      } else if(s==="ptg"){
+        const dur = ptgDur.value; // 60/90
+        const size = parseInt(ptgSize.value,10); // 2-5
+        const pack = parseInt(ptgPack.value,10); // 1/5/10/15
+        const base = ptgBase[dur][size];
+        sessions = pack===1 ? 1 : pack;
+        before = base * sessions;
+        const discPct = pack===1?0:(pack===5?10:(pack===10?15:20));
+        savings = before * (discPct/100);
+        finalPre = before - savings;
+        savingsPct = discPct;
+        baseText = `$${base} (group) × ${sessions} session${sessions>1?"s":""} for ${size} people, ${dur} min`;
+        discText = discPct ? `Package discount (${discPct}%)` : "No package discount";
+        ppPre = finalPre / size;
+      } else if(s==="other"){
+        baseText = "Custom service — pricing on consultation";
+        discText = "—";
+        before = 0; finalPre = 0; savings = 0; savingsPct = 0;
+      }
+
+      savingsPct = clamp(savingsPct, 0, 100);
+      const tax = finalPre * TAX_RATE;
+      const finalWith = finalPre + tax;
+
+      // Update UI
+      show(summaryTable,true);
+      baseExpr.textContent = baseText;
+      subtotalEl.textContent = money(before);
+      discLabel.textContent = discText;
+      savingsLine.textContent = `${money(savings)} (${pct(savingsPct/100)})`;
+      finalPretax.textContent = money(finalPre);
+      taxEl.textContent = money(tax);
+      finalWithTax.textContent = money(finalWith);
+
+      // Per person (group only)
+      if(s==="ptg"){
+        ppRow.classList.remove("hide");
+        ppWith = finalWith / parseInt(ptgSize.value,10);
+        perPerson.textContent = `${money(ppPre)} / ${money(ppWith)}`;
+      } else {
+        ppRow.classList.add("hide");
+      }
+
+      // Selected list
+      selectedList.innerHTML = renderSelectionSummary();
+      serviceSummary.textContent = humanServiceSummary();
+    }
+
+    function humanServiceSummary(){
+      const s = serviceEl.value;
+      if(s==="tier1"){
+        if(upfrontEl.value==="none") return `Online Coaching — Tier 1 ($250/mo), ${Math.max(1,parseInt(monthsEl.value||"1",10))} month(s)`;
+        return `Online Coaching — Tier 1 (Upfront ${upfrontEl.value} mo)`;
+      }
+      if(s==="tier2"){
+        if(upfrontEl.value==="none") return `Online Coaching — Tier 2 ($300/mo), ${Math.max(1,parseInt(monthsEl.value||"1",10))} month(s)`;
+        return `Online Coaching — Tier 2 (Upfront ${upfrontEl.value} mo)`;
+      }
+      if(s==="tier3"){
+        const ret = t3retEl.value==="none" ? "no returning discount" : `returning discount to $${t3retEl.value}`;
+        return `Contest Prep — Tier 3 ($350 final month, ${ret})`;
+      }
+      if(s==="pt1"){
+        const lenLbl = pt1Len.value+" min";
+        const packLbl = pt1Pack.value==="1" ? "Single" : (pt1Pack.value+" Sessions");
+        return `In-Person Training — 1-on-1 (${lenLbl}, ${packLbl})`;
+      }
+      if(s==="ptg"){
+        const dur = ptgDur.value, size = ptgSize.value, packLbl = ptgPack.value==="1" ? "Single" : (ptgPack.value+" Sessions");
+        return `In-Person Training — Group (${dur} min, ${size} people, ${packLbl})`;
+      }
+      return "Other / Not Sure Yet";
+    }
+
+    function renderSelectionSummary(){
+      const lines = [];
+      const s = serviceEl.value;
+      lines.push(`<span class="emph">${humanServiceSummary()}</span>`);
+      const n = notesEl.value.trim();
+      if(n) lines.push(`<span class="muted">Notes: ${escapeHtml(n)}</span>`);
+      const src = refSourceEl.value; 
+      const rn = (src==="Friend/Referral" ? (refNameEl.value.trim()||"—") : "—");
+      lines.push(`<span class="muted">Referral: ${escapeHtml(src)}${src==="Friend/Referral" ? ` ( ${escapeHtml(rn)} )` : ""}</span>`);
+      return lines.join("<br>");
+    }
+
+    function escapeHtml(s){
+      return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    // Copy & Email
+    function buildPlainQuote(){
+      const base = baseExpr.textContent;
+      const subtotal = subtotalEl.textContent;
+      const disc = discLabel.textContent;
+      const save = savingsLine.textContent;
+      const pre = finalPretax.textContent;
+      const tax = taxEl.textContent;
+      const withTax = finalWithTax.textContent;
+      const ppRowVisible = !ppRow.classList.contains("hide");
+      const pp = ppRowVisible ? perPerson.textContent : null;
+
+      const lines = [
+        `Name: ${nameEl.value || "-"}`,
+        `Email: ${emailEl.value || "-"}`,
+        `Phone: ${phoneEl.value || "-"}`,
+        `Referral Source: ${refSourceEl.value}`,
+        `Referrer’s Name: ${refSourceEl.value==="Friend/Referral"?(refNameEl.value||"-"):"-"} `,
+        ``,
+        `Service: ${humanServiceSummary()}`,
+        `Base Calculation: ${base}`,
+        `Subtotal (before discounts): ${subtotal}`,
+        `Discounts: ${disc}`,
+        `Savings: ${save}`,
+        `FINAL PRE-TAX TOTAL: ${pre}`,
+        `KY Sales Tax (6%): ${tax}`,
+        `FINAL TOTAL (WITH TAX): ${withTax}`,
+      ];
+      if(ppRowVisible) lines.push(`Per-Person (pre / with tax): ${pp}`);
+      const n = notesEl.value.trim();
+      if(n){ lines.push(""); lines.push(`Notes: ${n}`); }
+      lines.push(""); lines.push("Disclaimer acknowledged: This is an estimate and subject to change after consultation.");
+      return lines.join("\n");
+    }
+
+    function doCopy(){
+      const text = buildPlainQuote();
+      navigator.clipboard.writeText(text).then(()=> {
+        copyBtn.textContent = "Copied!";
+        setTimeout(()=> copyBtn.textContent="Copy Quote", 1200);
+      }).catch(()=> {
+        alert("Copy failed. Select the text manually:\n\n"+text);
+      });
+    }
+
+    function doEmail(){
+      const name = nameEl.value.trim();
+      const em = emailEl.value.trim();
+      if(!name || !em){ alert("Please enter your Name and Email first."); return; }
+
+      const subject = `Quote – ${name} – ${humanServiceSummary()}`;
+      const body = buildPlainQuote()
+        .replace(/\n/g, "%0D%0A")
+        .replace(/#/g, "%23"); // ensure color hashes or similar won't break
+
+      const mailto = `mailto:${encodeURIComponent(EMAIL_TO)}?cc=${encodeURIComponent(em)}&subject=${encodeURIComponent(subject)}&body=${body}`;
+      window.location.href = mailto;
+    }
+
+    // Events
+    refSourceEl.addEventListener("change", ()=>{ toggleRef(); });
+    [nameEl,emailEl,phoneEl,refNameEl,notesEl].forEach(el=> el.addEventListener("input", ()=>{}));
+
+    serviceEl.addEventListener("change", ()=>{ setupServiceUI(); calc(); });
+    upfrontEl.addEventListener("change", ()=>{ show(monthsWrap, upfrontEl.value==="none"); calc(); });
+    monthsEl.addEventListener("input", ()=>{ calc(); });
+    t3retEl.addEventListener("change", ()=>{ calc(); });
+
+    pt1Len.addEventListener("change", ()=>{ calc(); });
+    pt1Pack.addEventListener("change", ()=>{ calc(); });
+
+    [ptgDur, ptgSize, ptgPack].forEach(el=> el.addEventListener("change", ()=>{ calc(); }));
+
+    copyBtn.addEventListener("click", doCopy);
+    emailBtn.addEventListener("click", doEmail);
+
+    // init
+    toggleRef();
+    setupServiceUI();
+    calc();
+  </script>
+</body>
+</html>
